@@ -1,7 +1,7 @@
 
 # Safety-Aware Embedded Agentic AI for Mining Edge Systems
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.XXXXXXX.svg)](https://doi.org/10.5281/zenodo.XXXXXXX)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21374219.svg)](https://doi.org/10.5281/zenodo.21374219)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 **Replication Package & Source Code for the SBESC 2026 submission.**
