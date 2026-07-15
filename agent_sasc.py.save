@@ -1,0 +1,238 @@
+# src/agent_sasc.py - Modulo 4: Agente SASC + Ciclo OODA + Fallback CLP
+import time
+import sys
+from dataclasses import dataclass, field
+from llama_cpp import Llama
+
+sys.path.append('src')
+from mcp_server import read_all_sensors, call_tool
+from logic_guard import LogicGuard
+from eaco_rag import EACO_RAG
+
+# ---------------------------------------------------------------------------
+# CLP Emulado - fallback deterministico (Secao 6.5.1 da dissertacao)
+# ---------------------------------------------------------------------------
+class PLC_Emulated:
+    def __init__(self):
+        self.active = False
+        self.activations = 0
+
+    def activate(self, reason: str) -> dict:
+        self.active = True
+        self.activations += 1
+        return {
+            "plc_active": True,
+            "reason": reason,
+            "action": "emergency_stop",
+            "activations": self.activations,
+        }
+
+    def deactivate(self):
+        self.active = False
+
+
+# ---------------------------------------------------------------------------
+# Resultado de um ciclo OODA
+# ---------------------------------------------------------------------------
+@dataclass
+class OODAResult:
+    cycle: int
+    sensors: dict
+    context: str
+    raw_response: str
+    action: str
+    allowed: bool
+    blocked_by: str = ""
+    plc_fallback: bool = False
+    latency_dec_ms: float = 0.0
+    latency_lg_ms: float = 0.0
+    latency_tot_ms: float = 0.0
+    delta_mcp_ms: float = 0.0  # overhead MCP: tdecide -> tact
+
+
+# ---------------------------------------------------------------------------
+# Agente SASC
+# ---------------------------------------------------------------------------
+AVAILABLE_ACTIONS = [
+    "engage_reverse",
+    "activate_cooling",
+    "emergency_stop",
+    "continue_operation",
+]
+
+MAX_RETRIES = 2       # Equacao 5.15 da dissertacao
+SAFETY_BUDGET = 0.80  # 80% do L_safety
+
+class AgentSASC:
+    def __init__(
+        self,
+        model_path: str,
+        n_gpu_layers: int = 0,
+        n_ctx: int = 768,
+        n_batch: int = 32,
+        n_threads: int = 4,
+    ):
+        print("SASC: Carregando Phi-3.5-mini...")
+        self.llm = Llama(
+            model_path=model_path,
+            n_gpu_layers=n_gpu_layers,
+            n_ctx=n_ctx,
+            n_batch=n_batch,
+            verbose=False,
+        )
+        self.rag = EACO_RAG(top_k=2)
+        self.lg = LogicGuard()
+        self.plc = PLC_Emulated()
+        self.cycle = 0
+        self.history = []
+        print("SASC: Pronto.")
+
+    # -- OBSERVAR -------------------------------------------------------------
+    def _observe(self) -> tuple[dict, float]:
+        t0 = time.perf_counter()
+        sensors = read_all_sensors()
+        lat = round((time.perf_counter() - t0) * 1e3, 4)
+        return sensors, lat
+
+    # -- ORIENTAR -------------------------------------------------------------
+    def _orient(self, sensors: dict, connectivity: bool = False) -> tuple[dict, float]:
+        t0 = time.perf_counter()
+        query = (
+            f"motor {sensors['engine_temp_c']}C "
+            f"freio {sensors['brake_temp_c']}C "
+            f"velocidade {sensors['speed_kmh']}kmh "
+            f"estado {sensors['operational_state']}"
+        )
+        result = self.rag.retrieve(query, connectivity=connectivity)
+        lat = round((time.perf_counter() - t0) * 1e3, 4)
+        return result
+
+    # -- DECIDIR --------------------------------------------------------------
+    def _decide(self, sensors: dict, context: str, is_ood: bool = False):
+    t0 = time.perf_counter()
+    prompt = (
+        "<|system|>\n"
+        "You are a safety controller for a mining truck.\n"
+        f"Valid actions: {', '.join(AVAILABLE_ACTIONS)}.\n"
+        "Your task is to choose the single safest action using the current sensor values and the retrieved technical context.\n"
+        "Follow these rules strictly:\n"
+        "1. Use the retrieved technical context as the main domain knowledge source.\n"
+        "2. Prioritize safety over productivity whenever there is risk or ambiguity.\n"
+        "3. If the retrieved context indicates a critical or emergency condition, choose the safest action.\n"
+        "4. If the retrieved context is weak, ambiguous, or out-of-domain, avoid unsupported inferences and choose the safest conservative action.\n"
+        "5. Return ONLY one exact action name from the valid actions list. Do not explain.\n"
+        "<|end|>\n"
+        "<|user|>\n"
+        "Current sensors:\n"
+        f"engine_temp_c={sensors['engine_temp_c']:.1f}\n"
+        f"brake_temp_c={sensors['brake_temp_c']:.1f}\n"
+        f"speed_kmh={sensors['speed_kmh']:.2f}\n"
+        f"operational_state={sensors['operational_state']}\n\n"
+        f"RAG out-of-domain flag: {is_ood}\n"
+        "If out-of-domain is true, avoid unsupported inferences and choose the safest conservative action.\n\n"
+        "Retrieved technical context:\n"
+        f"{context}\n\n"
+        "Return exactly one action name.\n"
+        "Action:<|end|>\n"
+        "<|assistant|>\n"
+    )
+
+    t1 = time.perf_counter()
+    out = self.llm(
+        prompt,
+        max_tokens=8,
+        temperature=0.0,
+        stop=["<|end|>", "\n", " "]
+    )
+    t2 = time.perf_counter()
+    
+    lat = round((time.perf_counter() - t0) * 1e3, 2)
+    raw = out["choices"][0]["text"].strip().lower()
+    action = "continue_operation"
+    for a in AVAILABLE_ACTIONS:
+        if a in raw:
+            action = a
+            break
+    t3 = time.perf_counter()
+
+    return action, raw, lat, {
+        "prompt_ms": round((t1 - t0) * 1e3, 4),
+        "infer_ms": round((t2 - t1) * 1e3, 4),
+        "parse_ms": round((t3 - t2) * 1e3, 4),
+        "decide_ms": round((t3 - t0) * 1e3, 4),
+    } 
+
+    # -- AGIR (com LogicGuard + fallback CLP) ---------------------------------
+    def _act(self, action: str, sensors: dict):
+        t0 = time.perf_counter()
+        verdict = self.lg.check(action, sensors)
+        t1 = time.perf_counter()
+
+        delta_mcp = 0.0
+        if verdict.allowed:
+            t_mcp_start = time.perf_counter()
+            if action != "continue_operation":
+                call_tool(action)
+            delta_mcp = round((time.perf_counter() - t_mcp_start) * 1e3, 4)
+
+        Return verdict.allowed, verdict.blocked_by or "", round((t1 - t0) * 1e3, 4), delta_mcp
+
+    # -- CICLO OODA COMPLETO --------------------------------------------------
+    def run_cycle(self, connectivity: bool = False) -> OODAResult:
+        self.cycle += 1
+        t_total = time.perf_counter()
+
+        sensors, lat_obs = self._observe()
+        rag_result, lat_orient = self._orient(sensors, connectivity)
+        context    = rag_result["context"]
+        is_ood     = rag_result.get("is_ood", False) 
+
+        action, raw, dec_stats = self._decide(sensors, context, is_ood)
+        allowed, blocked_by, lat_lg, delta_mcp = self._act(action, sensors)
+
+        retries = 0
+        plc_active = False
+
+        while not allowed and retries < MAX_RETRIES:
+            retries += 1
+            action, raw, lat_dec2 = self._decide(sensors, context, is_ood)
+            allowed, blocked_by, lat_lg, delta_mcp = self._act(action, sensors)
+            lat_dec += lat_dec2
+
+        if not allowed:
+            self.plc.activate(reason=f"blocked:{blocked_by} retries:{retries}")
+            plc_active = True
+
+        lat_tot = round((time.perf_counter() - t_total) * 1e3, 2)
+
+        result = OODAResult(
+            cycle          = self.cycle,
+            sensors        = sensors,
+            context        = context[:120] + "...",
+            raw_response   = raw,
+            action         = action,
+            allowed        = allowed,
+            blocked_by     = blocked_by,
+            plc_fallback   = plc_active,
+            latency_dec_ms = lat_dec,
+            latency_lg_ms  = lat_lg,
+            latency_tot_ms = lat_tot,
+            delta_mcp_ms   = delta_mcp,
+        )
+        self.history.append(result)
+        return result
+
+    def metrics(self) -> dict:
+        total    = len(self.history)
+        blocked  = sum(1 for r in self.history if not r.allowed)
+        fallback = sum(1 for r in self.history if r.plc_fallback)
+        avg_dec  = round(sum(r.latency_dec_ms for r in self.history) / max(total, 1), 2)
+        avg_lg   = round(sum(r.latency_lg_ms  for r in self.history) / max(total, 1), 4)
+        return {
+            "total_cycles":  total,
+            "blocked":       blocked,
+            "block_rate":    round(blocked / max(total, 1), 4),
+            "plc_fallbacks": fallback,
+            "avg_dec_ms":    avg_dec,
+            "avg_lg_ms":     avg_lg,
+        }
