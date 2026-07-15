@@ -1,3 +1,0 @@
-EBNF
-root   ::= action
-action ::= "continue_operation" | "activate_cooling" | "emergency_stop"
