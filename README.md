@@ -98,8 +98,3 @@ If you use this dataset or framework in your research, please cite our SBESC 202
 ## ⚖️ License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
-
-```
-
-```
-This project is licensed under the MIT License - see the LICENSE file for details.
