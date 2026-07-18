@@ -1,4 +1,6 @@
+Aqui está o conteúdo completo e atualizado do seu arquivo `README.md`. Você pode copiar todo o bloco de código abaixo e colar diretamente no seu arquivo no repositório:
 
+```markdown
 # Safety-Aware Embedded Agentic AI for Mining Edge Systems
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21427593.svg)](https://doi.org/10.5281/zenodo.21427593)
@@ -18,46 +20,70 @@ The system relies on the **Model Context Protocol (MCP)** to standardize the too
 ## 📂 Repository Structure
 
 ```text
+├── analysis/
+│   ├── make_tables.py               # Generates LaTeX tables and macros directly from CSVs
+│   └── sanity_check.py              # Validates data integrity before table generation
 ├── data/
-│   └── cycles_20260704_135854.csv   # The audited 600-cycle experimental log
+│   ├── ht05_ablation.csv            # Quantization ablation results
+│   ├── ht06_sensitivity.csv         # Criticality sensitivity ablation
+│   └── ht07_main_5000.csv           # Main latency and conformity results
+├── paper/                           # (Auto-generated) Contains .tex snippets for the article
 ├── prompts/
 │   └── action.gbnf                  # Grammar constraint for the SLM
 ├── src/
 │   ├── agent_sasc.py                # Main Agentic loop, Pre-filter, and Watchdog
+│   ├── check_gpu.py                 # Hardware validation script
+│   ├── check_model_pi.py            # Model loading verification
 │   ├── config.py                    # Hyperparameters and model paths
 │   ├── eaco_rag.py                  # Offline Vector Store retrieval logic
 │   ├── logic_guard.py               # LTLf formal runtime monitors (Shields)
 │   ├── mcp_server.py                # Synthetic telemetry and tool executor
-│   ├── run_experiment.py            # Orchestrator for the SBESC E1 evaluation
+│   ├── run_experiment.py            # Legacy orchestrator
 │   ├── run_mrr_eval.py              # Script for RAG MRR evaluation
+│   ├── run_overnight_sbesc.py       # Main production orchestrator for data collection
 │   └── run_safety_eval.py           # Stress-test for LogicGuard MOET profiling
 └── README.md
+
 ```
 
 ## 🚀 How to Replicate the Experiments
 
 ### 1. Requirements
+
 This PoC is designed to run on a **Raspberry Pi 5 (16GB)** running standard Raspberry Pi OS (Debian) with Python 3.10+.
+
 * `llama-cpp-python` (built for your specific hardware backend)
 * `pandas`, `numpy`, `psutil`
 
-### 2. Running the Evaluation
-To execute the full 600-cycle battery across all modes (Prefilter-only, Pure-SLM, Pure-SLM+GBNF, Hybrid) and network scenarios (Connected, Degraded, Isolated):
+### 2. Execution Pipeline
+
+The replication follows a clear separation between data collection and data analysis. Ensure that the `Qwen2.5-0.5B-Instruct-Q4_K_M.gguf` model is correctly mapped in `src/config.py` before execution.
+
+**Step 2.1: Data Collection**
+Execute the overnight battery to run the full cycle array across all modes and ablations. This will populate the `data/` folder with the raw `.csv` traces.
 
 ```bash
-# Clone the repository
-git clone [https://github.com/your-username/mcaf-poc.git](https://github.com/your-username/mcaf-poc.git)
-cd mcaf-poc
+python src/run_overnight_sbesc.py
 
-# Run the orchestrator
-python src/run_experiment.py
 ```
-*Note: Ensure that the Qwen2.5-0.5B-Instruct-Q4_K_M.gguf model is correctly mapped in `src/config.py` before execution.*
+
+**Step 2.2: Sanity Check & Table Generation**
+Once the data is collected, run the analysis pipeline. This will process the logs, verify arithmetic consistency, and automatically generate the LaTeX codes (`.tex` files) for the tables and numerical macros used in the paper.
+
+```bash
+python analysis/sanity_check.py
+python analysis/make_tables.py
+
+```
+
+*The final generated tables will be available in the `paper/` directory.*
 
 ## 📊 Data Auditability
-The `data/` folder contains the exact CSV trace used to generate **Table IV** and **Table V** of the paper. It logs per-cycle latency decompositions ($L_{dec}$, $L_{LG}$, $L_{tot}$), decision routing, thermal conditions, and deterministic correctness against the ground-truth policy $\pi^*$.
+
+The `data/` folder contains the exact CSV traces used to generate the empirical results of the paper. They log per-cycle latency decompositions ($L_{dec}$, $L_{LG}$, $L_{tot}$), decision routing, thermal conditions, and deterministic correctness against the ground-truth policy $\pi^*$. The data generation logic can be audited directly inside `src/run_overnight_sbesc.py`.
 
 ## 📜 Citation
+
 If you use this dataset or framework in your research, please cite our SBESC 2026 paper:
 
 ```bibtex
@@ -68,7 +94,14 @@ If you use this dataset or framework in your research, please cite our SBESC 202
   year      = {2026},
   publisher = {IEEE}
 }
+
 ```
 
 ## ⚖️ License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+```
+
+```
 This project is licensed under the MIT License - see the LICENSE file for details.
