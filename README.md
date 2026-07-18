@@ -1,4 +1,3 @@
-```markdown
 # Safety-Aware Embedded Agentic AI for Mining Edge Systems
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21427593.svg)](https://doi.org/10.5281/zenodo.21427593)
@@ -41,7 +40,6 @@ The system relies on the **Model Context Protocol (MCP)** to standardize the too
 │   ├── run_overnight_sbesc.py       # Main production orchestrator for data collection
 │   └── run_safety_eval.py           # Stress-test for LogicGuard MOET profiling
 └── README.md
-
 ```
 
 ## 🚀 How to Replicate the Experiments
@@ -62,7 +60,6 @@ Execute the overnight battery to run the full cycle array across all modes and a
 
 ```bash
 python src/run_overnight_sbesc.py
-
 ```
 
 **Step 2.2: Sanity Check & Table Generation**
@@ -71,14 +68,13 @@ Once the data is collected, run the analysis pipeline. This will process the log
 ```bash
 python analysis/sanity_check.py
 python analysis/make_tables.py
-
 ```
 
 *The final generated tables will be available in the `paper/` directory.*
 
 ## 📊 Data Auditability
 
-The `data/` folder contains the exact CSV traces used to generate the empirical results of the paper. They log per-cycle latency decompositions ($L_{dec}$, $L_{LG}$, $L_{tot}$), decision routing, thermal conditions, and deterministic correctness against the ground-truth policy $\pi^*$. The data generation logic can be audited directly inside `src/run_overnight_sbesc.py`.
+The `data/` folder contains the exact CSV traces used to generate the empirical results of the paper. They log per-cycle latency decompositions ($L_{dec}$, $L_{LG}$, $L_{tot}$), decision routing, thermal conditions, and deterministic correctness against the ground-truth policy \pi^*. The data generation logic can be audited directly inside `src/run_overnight_sbesc.py`.
 
 ## 📜 Citation
 
@@ -92,7 +88,6 @@ If you use this dataset or framework in your research, please cite our SBESC 202
   year      = {2026},
   publisher = {IEEE}
 }
-
 ```
 
 ## ⚖️ License
