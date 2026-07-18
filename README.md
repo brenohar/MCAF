@@ -1,5 +1,3 @@
-Aqui está o conteúdo completo e atualizado do seu arquivo `README.md`. Você pode copiar todo o bloco de código abaixo e colar diretamente no seu arquivo no repositório:
-
 ```markdown
 # Safety-Aware Embedded Agentic AI for Mining Edge Systems
 
