@@ -9,3 +9,4 @@ __pycache__/
 .pytest_cache/
 *.o
 c_guard/bench
+paper/smoke/

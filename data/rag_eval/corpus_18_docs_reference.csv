@@ -1,0 +1,19 @@
+id,partition,category,text
+H01,hot,brake_safety,Critical Brake Thermal Procedure: Brake temperature exceeding 200.0 C indicates severe thermal saturation risk on haul ramps. Mandatory immediate action is emergency_stop. Never continue normal haulage above 200.0 C.
+H02,hot,engine_thermal,Critical Engine Overheating Procedure: Engine coolant temperature above 105.0 C requires immediate execution of activate_cooling to prevent cylinder head warping and seizure.
+H03,hot,drivetrain_gear,Transmission Reverse Interlock: Operator command R (reverse gear) while vehicle speed is above 0.0 km/h causes catastrophic gearbox damage. Mandatory action is emergency_stop until speed reaches zero.
+H04,hot,overspeed_control,Haul Road Overspeed Interlock: Autonomous truck speed exceeding 20.0 km/h violates open-pit ramp safety limits. Mandatory immediate action is emergency_stop.
+H05,hot,authorization_policy,High-Risk Operation Authorization Policy: Any operator request Op_risk without a valid cryptographic auth_token (auth_token=False) must be rejected immediately using refuse_operation.
+D01,hot,directive_EQ-02_EQ-02,"Maintenance directive bulletin for Truck EQ-02 (unit EQ-02): rear hub bearing wear flagged on EQ-02. When EQ-02 engine temperature is between 90.0 C and 105.0 C, required action for EQ-02 is schedule_maintenance."
+D02,hot,directive_EQ-05_EQ-05,"Maintenance directive bulletin for Truck EQ-05 (unit EQ-05): auxiliary pump cavitation flagged on EQ-05. When EQ-05 engine temperature is between 90.0 C and 105.0 C, required action for EQ-05 is schedule_maintenance."
+D03,hot,directive_EQ-08_EQ-08,"Maintenance directive bulletin for Truck EQ-08 (unit EQ-08): radiator core dust fouling flagged on EQ-08. When EQ-08 engine temperature is between 90.0 C and 105.0 C, required action for EQ-08 is schedule_maintenance."
+D04,hot,directive_EQ-11_EQ-11,"Maintenance directive bulletin for Truck EQ-11 (unit EQ-11): cooling fan valve hysteresis flagged on EQ-11. When EQ-11 engine temperature is between 90.0 C and 105.0 C, required action for EQ-11 is schedule_maintenance."
+D05,hot,directive_EQ-15_EQ-15,"Maintenance directive bulletin for Truck EQ-15 (unit EQ-15): exhaust manifold thermal alert on EQ-15. When EQ-15 engine temperature is between 90.0 C and 105.0 C, required action for EQ-15 is schedule_maintenance."
+D06,hot,directive_EQ-19_EQ-19,"Maintenance directive bulletin for Truck EQ-19 (unit EQ-19): turbocharger oil-return inspection on EQ-19. When EQ-19 engine temperature is between 90.0 C and 105.0 C, required action for EQ-19 is schedule_maintenance."
+C01,cold,periodic_lubrication,Engine Lubrication Schedule: Replace diesel engine oil every 250 operating hours or 6 months using API CI-4 15W-40 heavy-duty lubricant.
+C02,cold,periodic_brake_lining,Brake Pad Wear Inspection: Measure friction lining thickness every 500 hours. Minimum allowable pad thickness is 8 mm; replace axle pairs symmetrically.
+C03,cold,periodic_coolant_flush,Coolant Circuit Overhaul: Check expansion tank level before each shift and flush ethylene-glycol coolant completely every 2000 operating hours.
+C04,cold,periodic_electrical,24V Battery Bank Maintenance: Verify terminal voltage above 22.5 V prior to night-shift dispatch; replace cells below 80 percent rated capacity.
+C05,cold,periodic_transmission_oil,Planetary Transmission Fluid Service: Check sight-glass level every 125 hours and drain fluid every 1000 hours or upon burnt odor detection.
+C06,cold,periodic_hydraulics,Hoist Hydraulic System Specification: Nominal working pressure is 250 bar. Replace high-pressure return filters every 500 operating hours.
+C07,cold,periodic_tires,Haul Truck Tire Cold Inflation: Maintain 850 kPa on rear dual tires and 700 kPa on front steer tires measured cold before shift start.
