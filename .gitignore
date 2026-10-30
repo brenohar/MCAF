@@ -1,0 +1,11 @@
+# Binarios pesados de modelos (apenas MANIFEST.sha256 e versionado)
+models/*.gguf
+
+# Dados brutos gerados, logs noturnos e caches
+data/raw/
+logs/
+__pycache__/
+*.pyc
+.pytest_cache/
+*.o
+c_guard/bench

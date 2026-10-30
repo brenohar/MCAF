@@ -1,0 +1,223 @@
+{
+  "compiler": "ltlf2dfa + MONA",
+  "n_rules": 5,
+  "sum_individual_states": 11,
+  "sum_symbolic_transitions": 17,
+  "upper_bound_product_states": 48,
+  "rules": [
+    {
+      "rule_id": "phi_brake",
+      "description": "Brake overheating requires immediate emergency stop",
+      "ltlf_formula": "G(brake_hot -> act_estop)",
+      "latex_formula": "\\Box((T_{\\mathrm{brake}} > 200\\,^{\\circ}\\mathrm{C}) \\rightarrow a = \\mathrm{emergency\\_stop})",
+      "atoms": [
+        "brake_hot",
+        "act_estop"
+      ],
+      "corrective_action": "emergency_stop",
+      "initial_state": "1",
+      "states": [
+        "1",
+        "2"
+      ],
+      "accepting_states": [
+        "1"
+      ],
+      "n_states": 2,
+      "n_symbolic_edges": 3,
+      "n_expanded_transitions": 8,
+      "transitions": {
+        "1": {
+          "00": "1",
+          "01": "1",
+          "10": "2",
+          "11": "1"
+        },
+        "2": {
+          "00": "2",
+          "01": "2",
+          "10": "2",
+          "11": "2"
+        }
+      }
+    },
+    {
+      "rule_id": "phi_gear",
+      "description": "Reverse command or reverse actuation forbidden while vehicle is in motion",
+      "ltlf_formula": "G((rev_cmd_moving -> act_estop) & (v_pos -> !act_rev))",
+      "latex_formula": "\\Box(((v > 0 \\land \\mathrm{cmd}=R) \\rightarrow a = \\mathrm{emergency\\_stop}) \\land (v > 0 \\rightarrow a \\neq \\mathrm{reverse}))",
+      "atoms": [
+        "rev_cmd_moving",
+        "v_pos",
+        "act_estop",
+        "act_rev"
+      ],
+      "corrective_action": "emergency_stop",
+      "initial_state": "1",
+      "states": [
+        "1",
+        "2"
+      ],
+      "accepting_states": [
+        "1"
+      ],
+      "n_states": 2,
+      "n_symbolic_edges": 3,
+      "n_expanded_transitions": 32,
+      "transitions": {
+        "1": {
+          "0000": "1",
+          "0001": "1",
+          "0010": "1",
+          "0011": "1",
+          "0100": "1",
+          "0101": "2",
+          "0110": "1",
+          "0111": "2",
+          "1000": "2",
+          "1001": "2",
+          "1010": "1",
+          "1011": "1",
+          "1100": "2",
+          "1101": "2",
+          "1110": "1",
+          "1111": "2"
+        },
+        "2": {
+          "0000": "2",
+          "0001": "2",
+          "0010": "2",
+          "0011": "2",
+          "0100": "2",
+          "0101": "2",
+          "0110": "2",
+          "0111": "2",
+          "1000": "2",
+          "1001": "2",
+          "1010": "2",
+          "1011": "2",
+          "1100": "2",
+          "1101": "2",
+          "1110": "2",
+          "1111": "2"
+        }
+      }
+    },
+    {
+      "rule_id": "phi_speed",
+      "description": "Overspeed above haulage limit requires immediate emergency stop",
+      "ltlf_formula": "G(overspeed -> act_estop)",
+      "latex_formula": "\\Box((v > 20\\,\\mathrm{km/h}) \\rightarrow a = \\mathrm{emergency\\_stop})",
+      "atoms": [
+        "overspeed",
+        "act_estop"
+      ],
+      "corrective_action": "emergency_stop",
+      "initial_state": "1",
+      "states": [
+        "1",
+        "2"
+      ],
+      "accepting_states": [
+        "1"
+      ],
+      "n_states": 2,
+      "n_symbolic_edges": 3,
+      "n_expanded_transitions": 8,
+      "transitions": {
+        "1": {
+          "00": "1",
+          "01": "1",
+          "10": "2",
+          "11": "1"
+        },
+        "2": {
+          "00": "2",
+          "01": "2",
+          "10": "2",
+          "11": "2"
+        }
+      }
+    },
+    {
+      "rule_id": "phi_temp",
+      "description": "Critical engine temperature requires active cooling or dominating stop",
+      "ltlf_formula": "G(eng_crit -> act_thermal_safe)",
+      "latex_formula": "\\Box((T_{\\mathrm{eng}} > 105\\,^{\\circ}\\mathrm{C}) \\rightarrow a \\in \\{\\mathrm{activate\\_cooling}, \\mathrm{emergency\\_stop}\\})",
+      "atoms": [
+        "eng_crit",
+        "act_thermal_safe"
+      ],
+      "corrective_action": "activate_cooling",
+      "initial_state": "1",
+      "states": [
+        "1",
+        "2"
+      ],
+      "accepting_states": [
+        "1"
+      ],
+      "n_states": 2,
+      "n_symbolic_edges": 3,
+      "n_expanded_transitions": 8,
+      "transitions": {
+        "1": {
+          "00": "1",
+          "01": "1",
+          "10": "2",
+          "11": "1"
+        },
+        "2": {
+          "00": "2",
+          "01": "2",
+          "10": "2",
+          "11": "2"
+        }
+      }
+    },
+    {
+      "rule_id": "phi_auth",
+      "description": "Weak-until authorization: no risk execution without prior authorization",
+      "ltlf_formula": "((!op_risk_viol) U auth) | G(!op_risk_viol)",
+      "latex_formula": "(\\neg \\mathrm{Op}_{\\mathrm{risk}}) \\,\\mathcal{W}\\, \\mathrm{Auth}",
+      "atoms": [
+        "op_risk_viol",
+        "auth"
+      ],
+      "corrective_action": "refuse_operation",
+      "initial_state": "1",
+      "states": [
+        "1",
+        "2",
+        "3"
+      ],
+      "accepting_states": [
+        "1",
+        "2"
+      ],
+      "n_states": 3,
+      "n_symbolic_edges": 5,
+      "n_expanded_transitions": 12,
+      "transitions": {
+        "1": {
+          "00": "1",
+          "01": "2",
+          "10": "3",
+          "11": "2"
+        },
+        "2": {
+          "00": "2",
+          "01": "2",
+          "10": "2",
+          "11": "2"
+        },
+        "3": {
+          "00": "3",
+          "01": "3",
+          "10": "3",
+          "11": "3"
+        }
+      }
+    }
+  ]
+}
