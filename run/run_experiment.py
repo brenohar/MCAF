@@ -142,7 +142,7 @@ def build_campaign_cells(
         if not lora_path:
             raise ValueError("Informe --lora-path para rodar exp3_lora.")
         eng = _engine_for_device("0.5B", "Q4_K_M", device, lora_path=lora_path)
-        for ctrl in ("Pure-SLM", "Hybrid+RAG"):
+        for ctrl in ("Pure-SLM", "Hybrid", "Hybrid+RAG"):
             for seed in SEEDS:
                 rcfg = RunConfig(
                     controller=ctrl,

@@ -10,3 +10,5 @@ __pycache__/
 *.o
 c_guard/bench
 paper/smoke/
+models/hf_*/
+models/lora_*/
