@@ -9,7 +9,7 @@ from analysis.eval_rag_kappa import evaluate_annotated_csv
 from analysis.sanity_check import audit_csv_file
 from analysis.stats import paired_mcnemar_test
 from mcaf.agent import AuditableAgent
-from mcaf.config import BASE_DIR, DIRECTIVE_EQUIPMENTS, EngineConfig, RunConfig
+from mcaf.config import BASE_DIR, DIRECTIVE_EQUIPMENTS, EngineConfig, LOG_COLUMNS, RunConfig
 from mcaf.rag import CORPUS_DOCUMENTS, NeuralRetriever
 from mcaf.simulator import SituationSimulator
 
@@ -107,13 +107,24 @@ def test_etapa6_zero_cache_and_short_watchdog_triggers():
 
 def test_etapa7_fiscal_rejects_tampered_csv_and_mcnemar_handles_ties(tmp_path: Path):
     """Fiscal acusa arquivo adulterado sem edita-lo; McNemar trata 100% de identidade."""
-    smoke_csv = BASE_DIR / "data" / "raw" / "smoke" / "smoke_Hybrid+RAG_isolated_s42.csv"
-    assert smoke_csv.exists(), "Rode run/smoke_test.py antes desta verificacao."
+    valid_csv = tmp_path / "valid_fixture.csv"
+    eng = EngineConfig(model_size="0.5B", quantization="Q4_K_M", n_threads=2, n_gpu_layers=0)
+    rcfg = RunConfig(controller="Prefilter-only", scenario="isolated", seed=42, n_cycles=10)
+    sim = SituationSimulator(rcfg)
+    agent = AuditableAgent(engine_cfg=eng, run_cfg=rcfg)
+    with valid_csv.open("w", newline="", encoding="utf-8") as f:
+        writer = csv.DictWriter(f, fieldnames=list(LOG_COLUMNS))
+        writer.writeheader()
+        for sit, gt in sim.generate_episode():
+            writer.writerow(agent.step(sit, gt))
 
-    df = pd.read_csv(smoke_csv, keep_default_na=False)
+    assert audit_csv_file(valid_csv) == []
+
+    df = pd.read_csv(valid_csv, keep_default_na=False)
     tampered = tmp_path / "tampered.csv"
     df_bad = df.copy()
-    df_bad.loc[0, "t_total_ms"] = 0.00001
+    df_bad.loc[0, "t_dispatch_ms"] = 10.0
+    df_bad.loc[0, "t_total_ms"] = 0.01
     df_bad.to_csv(tampered, index=False)
 
     before_bytes = tampered.read_bytes()
