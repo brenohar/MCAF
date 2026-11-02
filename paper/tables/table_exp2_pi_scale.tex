@@ -1,10 +1,11 @@
 \begin{table*}[t]
 \centering
-\caption{Model Scale and Quantization Metrology on Raspberry Pi 5 (\texttt{Hybrid+RAG}, Isolated)}
+\caption{Model Scale and Quantization Metrology on Raspberry Pi 5 (\texttt{Hybrid+RAG}, Isolated; Desktop $N=5{,}000$, Pi 5 $N=250$; Latencies in ms)}
 \label{tab:exp2_scale}
+\setlength{\tabcolsep}{4.2pt}
 \begin{tabular}{lccccccccc}
 \toprule
-\textbf{Model} & \textbf{DC \% [95\% CI]} & \textbf{SCR \%} & \textbf{$L_{\mathrm{RAG}}$ p50} & \textbf{$L_{\mathrm{inf}}$ p50} & \textbf{$L_{\mathrm{tot}}$ p95} & \textbf{$L_{\mathrm{tot}}$ p99} & \textbf{RSS (MB)} & \textbf{$T_{\max}$ ($^\circ$C)} & \textbf{Cross-Arch ID \%} \\
+\textbf{Model} & \textbf{DC \% [95\% CI]} & \textbf{SCR \%} & \textbf{$L_{\mathrm{RAG}|\mathrm{SLM}}$ p50} & \textbf{$L_{\mathrm{inf}|\mathrm{SLM}}$ p50} & \textbf{$L_{\mathrm{tot}}$ p95} & \textbf{$L_{\mathrm{tot}}$ p99} & \textbf{RSS (MB)} & \textbf{$T_{\max}$ ($^\circ$C)} & \textbf{Cross-Arch ID \%} \\
 \midrule
 Qwen2.5-0.5B-Q4\_K\_M & 38.6 [34.8, 42.4] & 100.0 & 33.9 & 2247.9 & 2897.2 & 3000.7 & 1408 & 47.4 & 100.0 \\
 Qwen2.5-0.5B-Q8\_0 & 38.6 [34.8, 42.4] & 100.0 & 31.1 & 1041.0 & 1149.2 & 1181.4 & 1893 & 41.4 & 100.0 \\

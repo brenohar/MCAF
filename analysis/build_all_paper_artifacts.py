@@ -1,4 +1,5 @@
 """Stage 11 turnkey generator: audits all desktop + Pi 5 datasets and emits LaTeX tables, macros, and IEEE PDFs."""
+from decimal import Decimal, ROUND_HALF_UP
 import json
 from pathlib import Path
 import sys
@@ -29,6 +30,10 @@ plt.rcParams.update({
     "pdf.fonttype": 42,
     "ps.fonttype": 42,
 })
+
+
+def _us(ns: int) -> str:
+    return str((Decimal(int(ns)) / Decimal(1000)).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP))
 
 
 def _to_bool(v: object) -> bool:
@@ -70,10 +75,12 @@ def main() -> None:
     assert len(desk_csvs) == 480, f"Esperados 480 CSVs desktop, encontrados {len(desk_csvs)}"
     assert len(pi_csvs) == 155, f"Esperados 155 CSVs Pi 5, encontrados {len(pi_csvs)}"
 
+    print("[1/2] Auditando 635 CSVs...", flush=True)
     for f in desk_csvs + pi_csvs:
         errs = audit_csv_file(f)
         assert not errs, f"Falha fiscal em {f}: {errs}"
 
+    print("[2/2] Gerando tabelas, figuras e macros...", flush=True)
     generate_config_table(tables_dir)
 
     # 1. Tabela Exp 1 (Desktop DC/SCR/McNemar + Pi 5 Latencia pareada)
@@ -83,7 +90,8 @@ def main() -> None:
     ctrl_order = ["Prefilter-only", "Pure-SLM", "Pure-SLM+GBNF", "Hybrid", "Hybrid+RAG"]
     scen_order = ["connected", "degraded", "isolated"]
     e1_rows = []
-    for scen in scen_order:
+    for s_i, scen in enumerate(scen_order):
+        if s_i: e1_rows.append(r"\midrule")
         base_d = df_e1_d[(df_e1_d["controller"] == "Prefilter-only") & (df_e1_d["scenario"] == scen)]
         for ctrl in ctrl_order:
             sd = df_e1_d[(df_e1_d["controller"] == ctrl) & (df_e1_d["scenario"] == scen)]
@@ -110,7 +118,7 @@ def main() -> None:
     (tables_dir / "table_exp1_main.tex").write_text("\n".join([
         r"\begin{table*}[t]",
         r"\centering",
-        r"\caption{Baseline Controller Comparison Across Connectivity Scenarios (Qwen2.5-0.5B-Q4\_K\_M, Zero-Shot, 6 Actions)}",
+        r"\caption{Baseline Controller Comparison Across Connectivity Scenarios (Qwen2.5-0.5B-Q4\_K\_M, Zero-Shot; Desktop $N=5{,}000$, Pi 5 $N=500$ per Row)}",
         r"\label{tab:exp1_main}",
         r"\begin{tabular}{llcccccc}",
         r"\toprule",
@@ -163,12 +171,13 @@ def main() -> None:
     (tables_dir / "table_exp2_pi_scale.tex").write_text("\n".join([
         r"\begin{table*}[t]",
         r"\centering",
-        r"\caption{Model Scale and Quantization Metrology on Raspberry Pi 5 (\texttt{Hybrid+RAG}, Isolated)}",
+        r"\caption{Model Scale and Quantization Metrology on Raspberry Pi 5 (\texttt{Hybrid+RAG}, Isolated; Desktop $N=5{,}000$, Pi 5 $N=250$; Latencies in ms)}",
         r"\label{tab:exp2_scale}",
+        r"\setlength{\tabcolsep}{4.2pt}",
         r"\begin{tabular}{lccccccccc}",
         r"\toprule",
-        r"\textbf{Model} & \textbf{DC \% [95\% CI]} & \textbf{SCR \%} & \textbf{$L_{\mathrm{RAG}}$ p50} & "
-        r"\textbf{$L_{\mathrm{inf}}$ p50} & \textbf{$L_{\mathrm{tot}}$ p95} & \textbf{$L_{\mathrm{tot}}$ p99} & "
+        r"\textbf{Model} & \textbf{DC \% [95\% CI]} & \textbf{SCR \%} & \textbf{$L_{\mathrm{RAG}|\mathrm{SLM}}$ p50} & "
+        r"\textbf{$L_{\mathrm{inf}|\mathrm{SLM}}$ p50} & \textbf{$L_{\mathrm{tot}}$ p95} & \textbf{$L_{\mathrm{tot}}$ p99} & "
         r"\textbf{RSS (MB)} & \textbf{$T_{\max}$ ($^\circ$C)} & \textbf{Cross-Arch ID \%} \\",
         r"\midrule",
         *e2_rows,
@@ -218,7 +227,7 @@ def main() -> None:
     (tables_dir / "table_exp3_lora_ablation.tex").write_text("\n".join([
         r"\begin{table*}[t]",
         r"\centering",
-        r"\caption{Domain Adaptation Ablation on Qwen2.5-0.5B-Q4\_K\_M (6-Action Directive Task, Isolated)}",
+        r"\caption{Domain Adaptation Ablation on Qwen2.5-0.5B-Q4\_K\_M (Isolated; Desktop $N=5{,}000$, Pi 5 $N=500$ Paired Cycles per Row)}",
         r"\label{tab:exp3_lora}",
         r"\begin{tabular}{lccccc}",
         r"\toprule",
@@ -253,7 +262,7 @@ def main() -> None:
     (tables_dir / "table_exp4_watchdog.tex").write_text("\n".join([
         r"\begin{table}[t]",
         r"\centering",
-        r"\caption{Supervisory Watchdog Budget Analysis on Raspberry Pi 5 (\texttt{Hybrid+RAG})}",
+        r"\caption{Supervisory Watchdog Budget Analysis on Raspberry Pi 5 (\texttt{Hybrid+RAG}, $N=500$ Cycles per Row)}",
         r"\label{tab:exp4_watchdog}",
         r"\begin{tabular}{lcccc}",
         r"\toprule",
@@ -279,7 +288,7 @@ def main() -> None:
     for label, fn in c_specs:
         d = json.loads((cguard_dir / fn).read_text(encoding="utf-8"))
         max_us = d["max_observed_ns"] / 1000.0
-        c_rows.append(f"{label} & {d['mean_ns']:.2f} & {d['p50_ns']} & {d['p99_ns']} & {d['p9999_ns']} & {max_us:.2f} \\\\")
+        c_rows.append(f"{label} & {d['mean_ns']:.2f} & {d['p50_ns']} & {d['p99_ns']} & {d['p9999_ns']} & {_us(d['max_observed_ns'])} \\\\")
         c_plot_data.append((label.replace("\\_", "_"), d["p50_ns"], d["p9999_ns"], d["max_observed_ns"]))
 
     (tables_dir / "table_c_shield_rt.tex").write_text("\n".join([
@@ -289,7 +298,7 @@ def main() -> None:
         r"\label{tab:c_shield_rt}",
         r"\begin{tabular}{lccccc}",
         r"\toprule",
-        r"\textbf{Kernel / Scheduling Regime} & \textbf{$\mu$ (ns)} & \textbf{p50} & \textbf{p99} & \textbf{p99.99} & \textbf{Max ($\mu$s)} \\",
+        r"\textbf{Kernel / Scheduling Regime} & \textbf{$\mu$ (ns)} & \textbf{p50 (ns)} & \textbf{p99 (ns)} & \textbf{p99.99 (ns)} & \textbf{Max ($\mu$s)} \\",
         r"\midrule",
         *c_rows,
         r"\bottomrule",
@@ -383,7 +392,7 @@ def main() -> None:
     ax.set_xlabel("Shield Verification Latency (ns, log scale)")
     ax.set_xlim(10, 120000)
     for idx_b, mv in enumerate(max_ns_vals):
-        ax.text(mv * 1.12, idx_b + 0.17, f"{mv/1000.0:.2f} us", va="center", fontsize=7.5)
+        ax.text(mv * 1.12, idx_b + 0.17, f"{_us(mv)} us", va="center", fontsize=7.5)
     ax.legend(loc="lower right")
     ax.grid(axis="x", which="both", linestyle="--", alpha=0.4)
     fig.tight_layout()
@@ -413,10 +422,10 @@ def main() -> None:
         f"\\newcommand{{\\ShieldEdgesTotal}}{{{shield_meta['sum_symbolic_transitions']}}}",
         f"\\newcommand{{\\LoRAHybridRAGDC}}{{{lora_dc_m:.1f}\\%}}",
         f"\\newcommand{{\\CrossArchLoRAIdentity}}{{{cross_id_lora:.2f}\\%}}",
-        f"\\newcommand{{\\CShieldMedianNs}}{{{rt_stress['p50_ns']}\\,\\mathrm{{ns}}}}",
-        f"\\newcommand{{\\CShieldPFourNinesNs}}{{{rt_stress['p9999_ns']}\\,\\mathrm{{ns}}}}",
-        f"\\newcommand{{\\CShieldStdMaxUs}}{{{std_idle['max_observed_ns']/1000.0:.2f}\\,\\mu\\mathrm{{s}}}}",
-        f"\\newcommand{{\\CShieldRTStressedMaxUs}}{{{rt_stress['max_observed_ns']/1000.0:.2f}\\,\\mu\\mathrm{{s}}}}",
+        f"\\newcommand{{\\CShieldMedianNs}}{{\\ensuremath{{{rt_stress['p50_ns']}\\,\\mathrm{{ns}}}}}}",
+        f"\\newcommand{{\\CShieldPFourNinesNs}}{{\\ensuremath{{{rt_stress['p9999_ns']}\\,\\mathrm{{ns}}}}}}",
+        f"\\newcommand{{\\CShieldStdMaxUs}}{{\\ensuremath{{{_us(std_idle['max_observed_ns'])}\\,\\mu\\mathrm{{s}}}}}}",
+        f"\\newcommand{{\\CShieldRTStressedMaxUs}}{{\\ensuremath{{{_us(rt_stress['max_observed_ns'])}\\,\\mu\\mathrm{{s}}}}}}",
     ]
     (PAPER_DIR / "macros_generated.tex").write_text("\n".join(macros) + "\n", encoding="utf-8")
 
@@ -427,8 +436,8 @@ def main() -> None:
         "cuda_arm64_lora_identity_1500_cycles_pct": round(cross_id_lora, 2),
         "c_shield_p50_ns": rt_stress["p50_ns"],
         "c_shield_p9999_ns": rt_stress["p9999_ns"],
-        "c_shield_std_max_us": round(std_idle["max_observed_ns"] / 1000.0, 2),
-        "c_shield_rt_stressed_max_us": round(rt_stress["max_observed_ns"] / 1000.0, 2),
+        "c_shield_std_max_us": float(_us(std_idle["max_observed_ns"])),
+        "c_shield_rt_stressed_max_us": float(_us(rt_stress["max_observed_ns"])),
     }
     (PAPER_DIR / "experimental_digest.json").write_text(json.dumps(digest, indent=2) + "\n", encoding="utf-8")
     print("=== ARTEFATOS DO ARTIGO GERADOS E VERIFICADOS COM SUCESSO ===")

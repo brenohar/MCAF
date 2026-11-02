@@ -4,13 +4,13 @@
 \label{tab:c_shield_rt}
 \begin{tabular}{lccccc}
 \toprule
-\textbf{Kernel / Scheduling Regime} & \textbf{$\mu$ (ns)} & \textbf{p50} & \textbf{p99} & \textbf{p99.99} & \textbf{Max ($\mu$s)} \\
+\textbf{Kernel / Scheduling Regime} & \textbf{$\mu$ (ns)} & \textbf{p50 (ns)} & \textbf{p99 (ns)} & \textbf{p99.99 (ns)} & \textbf{Max ($\mu$s)} \\
 \midrule
 Standard Kernel (SCHED\_OTHER, Idle) & 56.46 & 56 & 75 & 93 & 48.33 \\
 Standard Kernel (SCHED\_FIFO 80, Idle) & 56.20 & 56 & 75 & 93 & 13.72 \\
 Standard Kernel (SCHED\_FIFO 80 + Load) & 56.09 & 56 & 75 & 93 & 18.63 \\
 PREEMPT\_RT + isolcpus=3 (Idle) & 56.19 & 56 & 75 & 93 & 15.37 \\
-PREEMPT\_RT + isolcpus=3 (+ Load) & 56.21 & 56 & 75 & 93 & 9.31 \\
+PREEMPT\_RT + isolcpus=3 (+ Load) & 56.21 & 56 & 75 & 93 & 9.32 \\
 \bottomrule
 \end{tabular}
 \end{table}

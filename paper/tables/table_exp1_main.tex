@@ -1,6 +1,6 @@
 \begin{table*}[t]
 \centering
-\caption{Baseline Controller Comparison Across Connectivity Scenarios (Qwen2.5-0.5B-Q4\_K\_M, Zero-Shot, 6 Actions)}
+\caption{Baseline Controller Comparison Across Connectivity Scenarios (Qwen2.5-0.5B-Q4\_K\_M, Zero-Shot; Desktop $N=5{,}000$, Pi 5 $N=500$ per Row)}
 \label{tab:exp1_main}
 \begin{tabular}{llcccccc}
 \toprule
@@ -11,11 +11,13 @@ Pure-SLM & connected & 62.4 [59.9, 65.0] & 81.3 & 36.5 & 933.2 & 1045.0 & $< 10^
 Pure-SLM+GBNF & connected & 62.4 [59.9, 65.0] & 81.3 & 92.6 & 1030.3 & 1143.6 & $< 10^{-99}$ \\
 Hybrid & connected & 81.1 [79.4, 82.9] & 100.0 & 51.8 & 914.3 & 1028.2 & $1.0000$ \\
 Hybrid+RAG & connected & 37.6 [35.0, 40.1] & 100.0 & 82.9 & 2643.7 & 2959.7 & $< 10^{-99}$ \\
+\midrule
 Prefilter-only & degraded & 82.1 [80.9, 83.3] & 100.0 & 0.1 & 0.1 & 0.1 & --- \\
 Pure-SLM & degraded & 62.9 [61.6, 64.2] & 80.8 & 39.6 & 944.8 & 1034.3 & $< 10^{-99}$ \\
 Pure-SLM+GBNF & degraded & 62.9 [61.6, 64.2] & 80.8 & 189.8 & 1028.8 & 1146.2 & $< 10^{-99}$ \\
 Hybrid & degraded & 82.1 [80.9, 83.3] & 100.0 & 51.9 & 914.6 & 1035.1 & $1.0000$ \\
 Hybrid+RAG & degraded & 37.1 [35.8, 38.4] & 100.0 & 84.0 & 2725.5 & 3092.6 & $< 10^{-99}$ \\
+\midrule
 Prefilter-only & isolated & 80.5 [77.5, 83.5] & 100.0 & 0.1 & 0.1 & 0.1 & --- \\
 Pure-SLM & isolated & 61.4 [57.6, 65.2] & 80.9 & 33.1 & 936.5 & 1043.0 & $< 10^{-99}$ \\
 Pure-SLM+GBNF & isolated & 61.4 [57.6, 65.2] & 80.9 & 189.8 & 1031.9 & 1142.0 & $< 10^{-99}$ \\
