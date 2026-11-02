@@ -1,0 +1,17 @@
+\begin{table*}[t]
+\centering
+\caption{Domain Adaptation Ablation on Qwen2.5-0.5B-Q4\_K\_M (6-Action Directive Task, Isolated)}
+\label{tab:exp3_lora}
+\begin{tabular}{lccccc}
+\toprule
+\textbf{Configuration} & \textbf{DC \% [95\% CI]} & \textbf{SCR \%} & \textbf{McNemar $p$ vs.\ PF} & \textbf{Pi 5 p95 (ms)} & \textbf{CUDA--ARM64 ID \%} \\
+\midrule
+Prefilter-only (Symbolic Baseline) & 80.5 [77.5, 83.5] & 100.0 & --- & 0.1 & 100.00 \\
+Hybrid+RAG (Zero-Shot) & 38.6 [34.8, 42.4] & 100.0 & $< 10^{-99}$ & 2967.6 & 100.00 \\
+Hybrid+RAG (5-Shot In-Context) & 39.5 [35.6, 43.3] & 100.0 & $< 10^{-99}$ & --- & --- \\
+Hybrid + MLP-LoRA (No RAG) & 80.3 [77.4, 83.1] & 100.0 & $4.88 \times 10^{-4}$ & 1125.0 & 100.00 \\
+Hybrid+RAG + MLP-LoRA & 94.3 [93.7, 94.8] & 100.0 & $2.66 \times 10^{-89}$ & 3241.9 & 99.80 \\
+Pure-SLM + MLP-LoRA (Unshielded) & 79.2 [76.3, 82.1] & 98.9 & $5.42 \times 10^{-20}$ & 1151.9 & 100.00 \\
+\bottomrule
+\end{tabular}
+\end{table*}

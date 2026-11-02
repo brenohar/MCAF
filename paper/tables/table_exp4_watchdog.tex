@@ -1,0 +1,19 @@
+\begin{table}[t]
+\centering
+\caption{Supervisory Watchdog Budget Analysis on Raspberry Pi 5 (\texttt{Hybrid+RAG})}
+\label{tab:exp4_watchdog}
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Regime} & \textbf{Budget (ms)} & \textbf{WD \%} & \textbf{DC \% [95\% CI]} & \textbf{SCR \%} \\
+\midrule
+Open-loop sweep (LoRA) & 250 & 82.4 & 82.8 [77.0, 88.6] & 100.0 \\
+Open-loop sweep (LoRA) & 500 & 82.4 & 82.8 [77.0, 88.6] & 100.0 \\
+Open-loop sweep (LoRA) & 1000 & 82.4 & 82.8 [77.0, 88.6] & 100.0 \\
+Open-loop sweep (LoRA) & 2000 & 82.4 & 82.8 [77.0, 88.6] & 100.0 \\
+Open-loop sweep (LoRA) & 3000 & 59.4 & 84.6 [80.1, 89.1] & 100.0 \\
+Open-loop sweep (LoRA) & 3500 & 0.0 & 94.2 [91.2, 97.2] & 100.0 \\
+Open-loop sweep (LoRA) & 4000 & 0.0 & 94.2 [91.2, 97.2] & 100.0 \\
+Closed-loop live (0-shot) & 500 & 82.4 & 82.8 [77.0, 88.6] & 100.0 \\
+\bottomrule
+\end{tabular}
+\end{table}

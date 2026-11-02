@@ -1,0 +1,10 @@
+{
+  "desktop_csv_files": 480,
+  "pi5_csv_files": 155,
+  "lora_hybrid_rag_dc_pct": 94.26,
+  "cuda_arm64_lora_identity_1500_cycles_pct": 99.93,
+  "c_shield_p50_ns": 56,
+  "c_shield_p9999_ns": 93,
+  "c_shield_std_max_us": 48.33,
+  "c_shield_rt_stressed_max_us": 9.31
+}

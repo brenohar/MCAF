@@ -1,0 +1,12 @@
+{
+  "iterations": 10000000,
+  "rt_sched_fifo": true,
+  "mlockall_active": true,
+  "interventions": 7246848,
+  "mean_ns": 56.20,
+  "p50_ns": 56,
+  "p99_ns": 75,
+  "p999_ns": 93,
+  "p9999_ns": 93,
+  "max_observed_ns": 13722
+}

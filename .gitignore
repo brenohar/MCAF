@@ -12,3 +12,6 @@ c_guard/bench
 paper/smoke/
 models/hf_*/
 models/lora_*/
+data/raw_pi/
+data/cross_device_identity/
+logs/
