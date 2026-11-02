@@ -1,0 +1,117 @@
+\documentclass{ieeeaccess}
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{booktabs}
+\usepackage{hyperref}
+
+\input{macros_generated.tex}
+
+\begin{document}
+
+\history{Manuscript received November 2, 2026; revised November 2, 2026; accepted November 2, 2026.}
+\doi{10.1109/ACCESS.2026.XXXXXXX}
+
+\title{Resilient Agentic Mining: An Architectural Framework Using Model Context Protocol and Deterministic Safety Guardrails}
+
+\author{Breno H. N. Andrade, \IEEEmembership{Graduate Student Member, IEEE}, \\
+Ricardo A. R. Oliveira, \IEEEmembership{Senior Member, IEEE}}
+
+\address{Departamento de Computação (DECOM), Universidade Federal de Ouro Preto (UFOP), Ouro Preto, MG, Brazil, \\
+and Instituto Tecnológico Vale (ITV), Belo Horizonte, MG, Brazil}
+
+\tnote{This research was supported by Coordenação de Aperfeiçoamento de Pessoal de Nível Superior (CAPES, Finance Code 001), Conselho Nacional de Desenvolvimento Científico e Tecnológico (CNPq), Instituto Tecnológico Vale (ITV), and Universidade Federal de Ouro Preto (UFOP).}
+
+\markboth{Andrade and Oliveira: Resilient Agentic Mining Framework (MCAF)}
+{Andrade and Oliveira: Resilient Agentic Mining Framework (MCAF)}
+
+\begin{abstract}
+Autonomous industrial mining relies on supervisory control architectures capable of balancing the semantic adaptability of Small Language Models (SLMs) with strict real-time deterministic safety guarantees. In this paper, we present the Mine-Continuum Agentic Framework (MCAF), an end-to-end resilient architecture that integrates the Model Context Protocol (MCP) with MONA-compiled $\mathrm{LTL}_f$ runtime safety guardrails. Evaluating $\TotalDesktopCycles$ desktop simulation cycles and $\TotalPiCycles$ embedded benchmark evaluations on a Raspberry Pi 5 (Cortex-A76) under standard and $\textsc{Preempt\_RT}$ kernels, we demonstrate that MCAF achieves $\LoRAHybridRAGDC$ decision concordance with an invariant $100.0\%$ Safety Concordance Ratio ($\textsc{SCR}$). Furthermore, cross-architectural auditing between CUDA ($\text{x86\_64}$) and ARM64 confirms $\CrossArchLoRAIdentity$ decision identity, while isolated real-time scheduling bounds the worst-case verification latency of the compiled ANSI C runtime shield to $\CShieldRTStressedMaxUs$ under heavy concurrent system load.
+\end{abstract}
+
+\begin{indexterms}
+Agentic workflows, industrial automation, Model Context Protocol (MCP), runtime verification, small language models (SLMs), temporal logic.
+\end{indexterms}
+
+\deflabel{IEEEaccess}
+
+\begin{sec}{I. INTRODUCTION}
+Industrial automation systems and autonomous mining haul trucks demand uncompromising safety, low-latency execution, and resilience against network degradation. Traditional Operational Technology (OT) controllers operate deterministically but lack semantic flexibility when faced with unmodeled environmental conditions or complex operator directives. Conversely, probabilistic Small Language Models (SLMs) offer rich reasoning capabilities but suffer from non-deterministic latency spikes and hallucinatory execution risks. 
+
+To bridge this divide, this paper introduces the Mine-Continuum Agentic Framework (MCAF). MCAF encapsulates probabilistic SLM reasoning chains within formal MONA-compiled $\mathrm{LTL}_f$ deterministic runtime monitors, ensuring that no physical command is executed without passing rigorous safety verification.
+\end{sec}
+
+\begin{sec}{II. SYSTEM ARCHITECTURE AND EXPERIMENTAL SETUP}
+The MCAF architecture couples a neural retrieval module with a situation simulator and an auditable runtime agent. Table~\ref{tab:config} summarizes the default experimental configuration automatically synchronized from our framework specification.
+
+\input{tables/table_config.tex}
+\end{sec}
+
+\begin{sec}{III. EXPERIMENTAL RESULTS AND DISCUSSION}
+
+\subsection{Baseline Comparison Across Connectivity Scenarios}
+Table~\ref{tab:exp1_main} details the performance of baseline controllers across connected, degraded, and isolated network topologies over $\TotalDesktopCycles$ experimental cycles.
+
+\input{tables/table_exp1_main.tex}
+
+\subsection{Model Scale and Quantization Metrology on Raspberry Pi 5}
+Evaluating scale and quantization trade-offs on the extreme edge (Raspberry Pi 5) reveals the memory footprint and SIMD vectorization efficiency of Qwen2.5 models, as reported in Table~\ref{tab:exp2_scale} and visualized in Fig.~\ref{fig:scale}.
+
+\input{tables/table_exp2_pi_scale.tex}
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.95\textwidth]{figures/fig1_pi5_scale_latency_rss.pdf}
+\caption{Model scale and quantization metrology on Raspberry Pi 5: (a) End-to-end inference latency ($p50$ and $p95$ whiskers); (b) Peak resident memory footprint (RSS) against the 8 GB board limit.}
+\label{fig:scale}
+\end{figure*}
+
+\subsection{Domain Adaptation and MLP-LoRA Ablation}
+Table~\ref{tab:exp3_lora} and Fig.~\ref{fig:lora} present the ablation results for zero-shot, few-shot, and LoRA-adapted configurations, confirming cross-architectural reproducibility between desktop CUDA and ARM64 edge hardware.
+
+\input{tables/table_exp3_lora_ablation.tex}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.48\textwidth]{figures/fig2_lora_ablation.pdf}
+\caption{Domain adaptation ablation showing decision concordance and safety concordance ratio ($\textsc{SCR}$) across prompt adaptation and LoRA strategies.}
+\label{fig:lora}
+\end{figure}
+
+\subsection{Supervisory Watchdog Performance and Trade-Offs}
+Table~\ref{tab:exp4_watchdog} and Fig.~\ref{fig:watchdog} illustrate the degradation profile and fallback rates under open-loop sweeps and closed-loop live watchdog budgets (500\,ms).
+
+\input{tables/table_exp4_watchdog.tex}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.48\textwidth]{figures/fig3_watchdog_tradeoff_pi5.pdf}
+\caption{Supervisory watchdog budget trade-offs on Raspberry Pi 5 comparing fallback frequency, decision concordance, and safety invariance.}
+\label{fig:watchdog}
+\end{figure}
+
+\subsection{Determinism and Real-Time Latency of the ANSI C Shield}
+Table~\ref{tab:c_shield_rt} and Fig.~\ref{fig:rt} document the execution jitter of $\TotalCShieldCycles$ evaluations of the MONA-compiled ANSI C shield across standard and $\textsc{Preempt\_RT}$ kernels with core isolation ($\text{isolcpus}=3$).
+
+\input{tables/table_c_shield_rt.tex}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.48\textwidth]{figures/fig4_c_shield_rt_tail.pdf}
+\caption{Tail latency distribution ($p99.99$ vs. worst-case observed) of the MONA-compiled ANSI C runtime guard across scheduling regimes.}
+\label{fig:rt}
+\end{figure}
+
+\end{sec}
+
+\begin{sec}{IV. CONCLUSION}
+The MCAF architecture successfully reconciles neuro-symbolic SLM autonomy with hard real-time safety in autonomous mining systems. Future work will extend MCAF to multi-agent decentralized coordination fleets under adversarial wireless constraints.
+\end{sec}
+
+\begin{thebibliography}{1}
+\bibitem{ref1} B. H. N. Andrade and R. A. R. Oliveira, ``Towards Resilient Agentic Mining: An Architectural Framework using Model Context Protocol and Deterministic Safety Guardrails,'' in \emph{Proc. ICEIS AXPRO}, 2026.
+\end{thebibliography}
+
+\end{document}
