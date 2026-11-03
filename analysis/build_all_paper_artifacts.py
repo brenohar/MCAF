@@ -393,7 +393,7 @@ def main() -> None:
     ax.set_xlim(10, 120000)
     for idx_b, mv in enumerate(max_ns_vals):
         ax.text(mv * 1.12, idx_b + 0.17, f"{_us(mv)} us", va="center", fontsize=7.5)
-    ax.legend(loc="lower right")
+    ax.legend(loc="lower center", bbox_to_anchor=(0.48, 1.02), ncol=2, frameon=True, fontsize=7.5)
     ax.grid(axis="x", which="both", linestyle="--", alpha=0.4)
     fig.tight_layout()
     fig.savefig(figs_dir / "fig4_c_shield_rt_tail.pdf")

@@ -1,117 +1,519 @@
+\let\TeXyear\year
 \documentclass{ieeeaccess}
+\let\setyear\year
+\let\year\TeXyear
+
 \usepackage{cite}
 \usepackage{amsmath,amssymb,amsfonts}
 \usepackage{algorithmic}
 \usepackage{graphicx}
 \usepackage{textcomp}
 \usepackage{booktabs}
-\usepackage{hyperref}
+\usepackage{placeins}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, backgrounds, calc}
+
+% Compatibiliza todas as cores spotcolor da ieeeaccess.cls com xcolor/TikZ
+\definecolor{accessblue}{cmyk}{1, 0.3, 0, 0.2}
+\definecolor{greycolor}{cmyk}{0, 0, 0, 0.8}
+\definecolor{grey}{cmyk}{0, 0, 0, 0.1}
+\definecolor{black}{cmyk}{0, 0, 0, 1}
+
+\definecolor{mcafSlate}{HTML}{334155}
+\definecolor{mcafTeal}{HTML}{1A7A5E}
+\definecolor{mcafBlue}{HTML}{1F4E79}
+\definecolor{mcafPurple}{HTML}{5B3E85}
+\definecolor{mcafAmber}{HTML}{C85A17}
+\definecolor{mcafGreen}{HTML}{1E7E34}
+
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 
 \input{macros_generated.tex}
+\providecommand{\PARstart}[2]{#1#2}
 
 \begin{document}
 
-\history{Manuscript received November 2, 2026; revised November 2, 2026; accepted November 2, 2026.}
+\history{Date of publication xxxx 00, 0000, date of current version xxxx 00, 0000.}
 \doi{10.1109/ACCESS.2026.XXXXXXX}
 
 \title{Resilient Agentic Mining: An Architectural Framework Using Model Context Protocol and Deterministic Safety Guardrails}
 
-\author{Breno H. N. Andrade, \IEEEmembership{Graduate Student Member, IEEE}, \\
-Ricardo A. R. Oliveira, \IEEEmembership{Senior Member, IEEE}}
+\author{\uppercase{Breno H. N. Andrade}\authorrefmark{1,2}, \IEEEmembership{Graduate Student Member, IEEE},
+and \uppercase{Ricardo A. R. Oliveira}\authorrefmark{1}, \IEEEmembership{Senior Member, IEEE}}
 
-\address{Departamento de Computação (DECOM), Universidade Federal de Ouro Preto (UFOP), Ouro Preto, MG, Brazil, \\
-and Instituto Tecnológico Vale (ITV), Belo Horizonte, MG, Brazil}
+\address[1]{Departamento de Computa\c{c}\~{a}o (DECOM), Universidade Federal de Ouro Preto (UFOP), Ouro Preto, MG 35400-000, Brazil}
+\address[2]{Instituto Tecnol\'{o}gico Vale (ITV), Belo Horizonte, MG, Brazil}
 
-\tnote{This research was supported by Coordenação de Aperfeiçoamento de Pessoal de Nível Superior (CAPES, Finance Code 001), Conselho Nacional de Desenvolvimento Científico e Tecnológico (CNPq), Instituto Tecnológico Vale (ITV), and Universidade Federal de Ouro Preto (UFOP).}
+\tfootnote{This research was supported by Coordena\c{c}\~{a}o de Aperfei\c{c}oamento de Pessoal de N\'{i}vel Superior (CAPES, Finance Code 001), Conselho Nacional de Desenvolvimento Cient\'{i}fico e Tecnol\'{o}gico (CNPq), Instituto Tecnol\'{o}gico Vale (ITV), and Universidade Federal de Ouro Preto (UFOP).}
 
-\markboth{Andrade and Oliveira: Resilient Agentic Mining Framework (MCAF)}
+\markboth
+{Andrade and Oliveira: Resilient Agentic Mining Framework (MCAF)}
 {Andrade and Oliveira: Resilient Agentic Mining Framework (MCAF)}
 
+% Atualize abaixo com seu e-mail institucional de autor correspondente:
+\corresp{Corresponding author: Breno H. N. Andrade (e-mail: breno.andrade@aluno.ufop.edu.br).}
+
 \begin{abstract}
-Autonomous industrial mining relies on supervisory control architectures capable of balancing the semantic adaptability of Small Language Models (SLMs) with strict real-time deterministic safety guarantees. In this paper, we present the Mine-Continuum Agentic Framework (MCAF), an end-to-end resilient architecture that integrates the Model Context Protocol (MCP) with MONA-compiled $\mathrm{LTL}_f$ runtime safety guardrails. Evaluating $\TotalDesktopCycles$ desktop simulation cycles and $\TotalPiCycles$ embedded benchmark evaluations on a Raspberry Pi 5 (Cortex-A76) under standard and $\textsc{Preempt\_RT}$ kernels, we demonstrate that MCAF achieves $\LoRAHybridRAGDC$ decision concordance with an invariant $100.0\%$ Safety Concordance Ratio ($\textsc{SCR}$). Furthermore, cross-architectural auditing between CUDA ($\text{x86\_64}$) and ARM64 confirms $\CrossArchLoRAIdentity$ decision identity, while isolated real-time scheduling bounds the worst-case verification latency of the compiled ANSI C runtime shield to $\CShieldRTStressedMaxUs$ under heavy concurrent system load.
+Autonomous Haulage Systems (AHS) in open-pit mining require onboard supervisory controllers capable of combining the contextual adaptability of Small Language Models (SLMs) with strict real-time operational safety across intermittent wireless networks. However, deploying probabilistic language models directly inside Operational Technology (OT) loops introduces severe risks of state-dependent safety violations, multi-second inference latency spikes, zero-shot miscalibration, and cross-architectural numerical drift. In this paper, we present the Mine-Continuum Agentic Framework (MCAF), an end-to-end neuro-symbolic supervisory architecture that decouples Model Context Protocol (MCP) document retrieval and parameter-efficient low-rank adaptation (\texttt{MLP-LoRA}) from formal Linear Temporal Logic over Finite Traces ($\mathrm{LTL}_f$) runtime safety guardrails compiled via \texttt{MONA} into zero-allocation ANSI~C11. Across {\TotalDesktopCycles} desktop GPU simulation cycles and {\TotalPiCycles} embedded evaluations on a Raspberry Pi~5 (Arm Cortex-A76), MCAF elevates isolated Decision Concordance to {\LoRAHybridRAGDC} while enforcing an invariant $100.0\%$ Safety Concordance Ratio (\textsc{SCR}). Cycle-paired auditing between $\text{x86\_64}$/CUDA and ARM64 confirms {\CrossArchLoRAIdentity} execution identity, and pinning the compiled ANSI~C11 shield to an isolated \texttt{PREEMPT\_RT} core (\texttt{isolcpus=3}) bounds worst-case verification latency across {\TotalCShieldCycles} cycles to \CShieldRTStressedMaxUs\ under heavy concurrent system load.
 \end{abstract}
 
-\begin{indexterms}
+\begin{keywords}
 Agentic workflows, industrial automation, Model Context Protocol (MCP), runtime verification, small language models (SLMs), temporal logic.
-\end{indexterms}
+\end{keywords}
 
-\deflabel{IEEEaccess}
+\titlepgskip=-15pt
 
-\begin{sec}{I. INTRODUCTION}
-Industrial automation systems and autonomous mining haul trucks demand uncompromising safety, low-latency execution, and resilience against network degradation. Traditional Operational Technology (OT) controllers operate deterministically but lack semantic flexibility when faced with unmodeled environmental conditions or complex operator directives. Conversely, probabilistic Small Language Models (SLMs) offer rich reasoning capabilities but suffer from non-deterministic latency spikes and hallucinatory execution risks. 
+\maketitle
 
-To bridge this divide, this paper introduces the Mine-Continuum Agentic Framework (MCAF). MCAF encapsulates probabilistic SLM reasoning chains within formal MONA-compiled $\mathrm{LTL}_f$ deterministic runtime monitors, ensuring that no physical command is executed without passing rigorous safety verification.
-\end{sec}
+\section{INTRODUCTION}
+\PARstart{A}{utonomous} Haulage Systems (AHS) constitute the operational backbone of modern open-pit mining, where ultra-class haul trucks must execute safety-critical supervisory decisions under severe environmental and communication constraints~\cite{iso17757}. As mining operations deepen, pit topography, bench geometry, and mobile heavy machinery induce multipath fading, transient packet loss, and complete wireless blackouts between haul roads and central dispatch servers. Sustaining autonomous productivity across this industrial computing continuum requires edge-resident supervisory controllers capable of reasoning over multi-variable equipment telemetry and contextual Standard Operating Procedures (SOPs) without relying on uninterrupted cloud connectivity~\cite{andrade2026mcaf}.
 
-\begin{sec}{II. SYSTEM ARCHITECTURE AND EXPERIMENTAL SETUP}
-The MCAF architecture couples a neural retrieval module with a situation simulator and an auditable runtime agent. Table~\ref{tab:config} summarizes the default experimental configuration automatically synchronized from our framework specification.
+Conventional Operational Technology (OT) architectures address equipment safety through Programmable Logic Controllers (PLCs) and hard-coded symbolic interlocks designed in accordance with functional safety standards such as IEC~61508~\cite{iec61508}. While purely symbolic rule tables guarantee microsecond-scale determinism and strict threshold compliance, they exhibit structural rigidity when confronted with nuanced operational trade-offs---such as correlating multi-cycle engine thermal trends with unauthenticated operator overrides or site-specific maintenance directives. Conversely, recent Small Language Models (SLMs) coupled with Retrieval-Augmented Generation (RAG) and standardized tool interfaces such as the Model Context Protocol (MCP)~\cite{mcp2024} enable rich semantic interpretation directly on embedded hardware~\cite{qwen25}. However, deploying probabilistic neural models inside industrial control loops introduces four acute hazards:
+\begin{enumerate}
+    \item \emph{Safety invariant violations:} Even when syntactically constrained via formal grammars such as Backus--Naur Form (\texttt{GBNF}), SLMs remain vulnerable to semantic hallucinations that violate state-dependent or temporal physical constraints.
+    \item \emph{Zero-shot calibration failure at small scales:} Sub-3B parameter models frequently misinterpret retrieved normative context in zero-shot regimes, either defaulting to overly conservative halts or ignoring conditional maintenance rules.
+    \item \emph{Heavy-tailed cognitive latency:} Autoregressive prefill and decoding over retrieved context incur multi-second execution latencies on embedded ARM processors, threatening supervisory control deadlines.
+    \item \emph{Cross-architectural numerical drift:} Non-associative floating-point reductions across heterogeneous vector instruction sets (e.g., desktop CUDA versus embedded ARMv8.2-A \texttt{NEON}/\texttt{SDOT}) can alter argmax token selection on boundary states.
+\end{enumerate}
+
+To reconcile semantic adaptability with hard real-time determinism, this paper presents the \emph{Mine-Continuum Agentic Framework} (MCAF), a neuro-symbolic supervisory control architecture for autonomous mining haul trucks. Extending our preliminary architectural formulation~\cite{andrade2026mcaf}, MCAF decouples high-level contextual reasoning from formal physical safety enforcement across an auditable Observe--Orient--Decide--Act (OODA) pipeline. At the cognitive tier, an MCP-compliant orientation module retrieves operational directives from an embedded vector store and queries a domain-adapted, quantized SLM equipped with low-rank multilayer perceptron adapters (\texttt{MLP-LoRA})~\cite{hu2022lora}. At the actuation boundary, every proposed command---whether emitted by the SLM or triggered by a supervisory deadline watchdog---is intercepted by a formal runtime safety shield~\cite{alshiekh2018shield} synthesized from Linear Temporal Logic over Finite Traces ($\mathrm{LTL}_f$)~\cite{degiacomo2013ltlf} via \texttt{MONA}~\cite{klarlund2001mona} into zero-allocation ANSI~C11.
+
+The primary contributions of this work are summarized as follows:
+\begin{itemize}
+    \item \textbf{Neuro-Symbolic Continuum Architecture with Formal $\mathrm{LTL}_f$ Shielding:} We design and implement MCAF, combining fast symbolic prefiltering, MCP-based local neural RAG, and \texttt{MONA}-compiled deterministic finite-state automata (\ShieldStatesTotal~states and \ShieldEdgesTotal~symbolic transition edges) that enforce $100.0\%$ Safety Concordance Ratio (\textsc{SCR}) across all connectivity and timeout regimes, whereas unshielded grammar-constrained (\texttt{GBNF}) and LoRA-adapted SLMs still exhibit residual safety violations.
+    \item \textbf{Compact Domain Adaptation via \texttt{MLP-LoRA} Without Cloud Dependency:} Across {\TotalDesktopCycles} desktop evaluation cycles, we demonstrate that parameter-efficient \texttt{MLP-LoRA} adaptation on \texttt{Qwen2.5-0.5B-Q4\_K\_M} overcomes the $\approx 80.5\%$ informational ceiling of memoryless symbolic controllers and the zero-shot degradation of RAG, elevating Decision Concordance (\textsc{DC}) to $\LoRAHybridRAGDC$ in fully isolated pit operation ($p < 10^{-88}$ via paired McNemar tests).
+    \item \textbf{Cross-Architectural Determinism and SIMD Quantization Metrology on ARM64:} Evaluating $\TotalPiCycles$ embedded supervisory cycles on a Raspberry Pi~5 (Broadcom BCM2712, Cortex-A76), we audit cycle-by-cycle decision parity between $\text{x86\_64}$/CUDA and ARM64, establishing $\CrossArchLoRAIdentity$ execution identity over $1{,}500$ paired \texttt{MLP-LoRA} cycles and characterizing an architectural alignment effect in which 8-bit block quantization (\texttt{Q8\_0}) executes $2.1\times$ faster than 4-bit superblock quantization (\texttt{Q4\_K\_M}) for \texttt{0.5B} models due to ARMv8.2-A \texttt{SDOT} register alignment.
+    \item \textbf{Hard Real-Time Verification Under \texttt{PREEMPT\_RT} Core Isolation:} By lowering the compiled $\mathrm{LTL}_f$ automata into static-memory ANSI~C11 pinned to an isolated Cortex-A76 core (\texttt{isolcpus=3}) under a real-time Linux kernel (\texttt{PREEMPT\_RT})~\cite{reghenzani2019rt}, we validate across {\TotalCShieldCycles} verification cycles a median execution time of \CShieldMedianNs, a $p_{99.99}$ latency of \CShieldPFourNinesNs, and a bounded worst-case tail of \CShieldRTStressedMaxUs\ under severe concurrent CPU, virtual memory, and I/O contention---a $5.19\times$ tail reduction relative to standard Linux scheduling (\CShieldStdMaxUs).
+\end{itemize}
+
+The remainder of this article is organized as follows. Section~\ref{sec:related} reviews related literature across autonomous mining, edge SLMs, and formal runtime shielding. Section~\ref{sec:arch} formalizes the continuum operational problem, the layered MCAF architecture, the \texttt{MONA}-to-ANSI-C11 shield synthesis pipeline, and the experimental methodology. Section~\ref{sec:results} presents and discusses the empirical findings across all six experimental campaigns and real-time kernel benchmarks. Section~\ref{sec:threats} examines threats to validity and operational limitations, and Section~\ref{sec:conclusion} concludes the paper.
+
+\section{RELATED WORK}
+\label{sec:related}
+
+\subsection{Autonomous Mining and the Industrial Computing Continuum}
+Modern Autonomous Haulage Systems (AHS) combine onboard perception and Programmable Logic Controller (PLC) interlocks with centralized fleet management systems to coordinate ultra-class haul trucks across dynamic open-pit topologies~\cite{marshall2016robotics,iso17757}. While safety-critical actuation loops adhere strictly to IEC~61508 deterministic scan budgets~\cite{iec61508}, supervisory arbitration increasingly spans an edge-to-cloud computing continuum~\cite{balouek2019continuum}. In industrial Operational Technology (OT) environments, Sisinni~\emph{et~al.}~\cite{sisinni2018iiot} highlight that wireless channel intermittency, multipath shadowing, and deterministic latency requirements preclude offloading closed-loop control decisions to remote cloud servers. In deep-pit mining benches, haul trucks routinely experience transient packet loss and complete communication blackouts lasting from seconds to minutes~\cite{andrade2026mcaf}. Existing edge-computing frameworks in mining predominantly deploy fixed symbolic state machines or narrow, task-specific regression models during disconnections; consequently, they cannot dynamically cross-reference multi-sensor equipment trajectories against evolving textual Standard Operating Procedures (SOPs) and maintenance advisories on board the vehicle.
+
+\subsection{Edge SLMs, Constrained Decoding, and Agentic Context Protocols}
+Recent advances in instruction-tuned Small Language Models (SLMs), such as the \texttt{Qwen2.5} family~\cite{qwen25}, combined with low-rank adaptation (\texttt{LoRA})~\cite{hu2022lora,dettmers2023qlora}, have made it feasible to execute language reasoning within the $4$--$8\,\text{GB}$ memory envelope of embedded SoCs. To ground model outputs in domain-specific documentation and external telemetry, Retrieval-Augmented Generation (RAG)~\cite{lewis2020rag} and interleaved reasoning-and-acting paradigms (\texttt{ReAct})~\cite{yao2023react} have been standardized through open interoperability layers such as the Model Context Protocol (MCP)~\cite{mcp2024}. Nevertheless, empirical studies on structured generation focus largely on syntactic conformance: finite-state and context-free grammar masks—such as \texttt{Outlines}~\cite{willard2023outlines} and \texttt{llama.cpp} Backus--Naur Form (\texttt{GBNF}) constraints—guarantee that decoded strings belong to a valid schema or action vocabulary $\mathcal{A}$, yet impose non-trivial per-token logit masking overhead. Crucially, syntactic validity does not imply physical safety: a grammar-constrained SLM can emit a syntactically legal command (e.g., \texttt{continue\_operation}) that violates thermal or authorization invariants. Moreover, prior edge-LLM benchmarks rarely audit bit-level or action-level reproducibility across heterogeneous GPU and ARM64 SIMD instruction sets under strict zero-cache isolation.
+
+\subsection{Formal Runtime Verification and Neuro-Symbolic Shielding}
+Runtime Verification (RV) provides rigorous guarantees by monitoring system executions against formal temporal specifications and intervening whenever a violation is imminent~\cite{leucker2009rv}. Extending reactive synthesis, Bloem~\emph{et~al.}~\cite{bloem2015shield} and Alshiekh~\emph{et~al.}~\cite{alshiekh2018shield} formalized \emph{safety shielding} to wrap probabilistic learning agents within deterministic automata synthesized from Linear Temporal Logic (LTL), overriding unsafe actions before physical actuation. For episodic supervisory control with finite operational horizons, Linear Temporal Logic over Finite Traces ($\mathrm{LTL}_f$)~\cite{degiacomo2013ltlf} admits exact compilation into canonical Deterministic Finite Automata (DFA) via First-Order Logic decision procedures over finite words such as \texttt{MONA}~\cite{klarlund2001mona}.
+
+Despite strong theoretical foundations, existing neuro-symbolic shielding approaches for language agents typically evaluate symbolic monitors inside high-level Python runtimes on cloud or desktop GPUs, leaving them exposed to garbage-collection pauses, OS scheduler preemption, and unbounded inference timeouts. Achieving hard real-time isolation on embedded Linux platforms requires coupling \texttt{PREEMPT\_RT} kernel preemption~\cite{reghenzani2019rt} with zero-allocation compiled C monitors and dedicated CPU core partitioning. Extending our preliminary architectural concept~\cite{andrade2026mcaf}, MCAF bridges all three domains simultaneously: it integrates local MCP-mediated neural RAG and parameter-efficient \texttt{MLP-LoRA} adaptation on embedded ARM64 hardware with supervisory deadline watchdogs and a \texttt{MONA}-synthesized, zero-allocation ANSI~C11 $\mathrm{LTL}_f$ shield verified across $5 \times 10^7$ real-time cycles.
+
+\section{SYSTEM ARCHITECTURE AND EXPERIMENTAL SETUP}
+\label{sec:arch}
+
+\subsection{Continuum Operational Model and Problem Formulation}
+We model the onboard supervisory control of an autonomous mining haul truck over discrete decision cycles $t \in \{0, 1, \dots, T-1\}$. At each cycle $t$, the onboard controller observes a structured equipment situation vector:
+\begin{equation}
+    s_t = \bigl(T_{\mathrm{brake}}^{(t)},\; v^{(t)},\; T_{\mathrm{eng}}^{(t)},\; \Delta T_{\mathrm{eng}}^{(t)},\; c_{\mathrm{op}}^{(t)},\; \alpha_{\mathrm{auth}}^{(t)}\bigr) \in \mathcal{S},
+    \label{eq:state_vector}
+\end{equation}
+where $T_{\mathrm{brake}}^{(t)} \in \mathbb{R}_{\ge 0}$ denotes brake assembly temperature ($^\circ\text{C}$), $v^{(t)} \in \mathbb{R}_{\ge 0}$ is haul speed ($\text{km/h}$), $T_{\mathrm{eng}}^{(t)} \in \mathbb{R}_{\ge 0}$ is engine coolant temperature ($^\circ\text{C}$), $\Delta T_{\mathrm{eng}}^{(t)} \in \{\texttt{falling}, \texttt{stable}, \texttt{rising}\}$ summarizes the five-cycle thermal trajectory, $c_{\mathrm{op}}^{(t)} \in \mathcal{A}$ represents an external dispatch or operator command, and $\alpha_{\mathrm{auth}}^{(t)} \in \{\texttt{True}, \texttt{False}\}$ indicates cryptographic authorization validity.
+
+The supervisory controller must select and execute a single discrete control action $a_t^{\mathrm{exec}} \in \mathcal{A}$ per cycle from the six-action operational vocabulary:
+\begin{align}
+    \mathcal{A} = \{&\texttt{continue\_operation},\; \texttt{activate\_cooling}, \nonumber\\
+                    &\texttt{emergency\_stop},\; \texttt{refuse\_operation}, \nonumber\\
+                    &\texttt{schedule\_maintenance},\; \texttt{reduce\_speed}\}.
+    \label{eq:action_space}
+\end{align}
+While acute physical hazards are governed by hard threshold invariants---specifically brake overheating ($T_{\mathrm{brake}} > 200\,^\circ\text{C}$), overspeed under hazard ($v > 20\,\text{km/h}$), critical engine overheating ($T_{\mathrm{eng}} > 105\,^\circ\text{C}$), and unauthenticated override rejection ($\alpha_{\mathrm{auth}} = \texttt{False}$)---non-critical operational regimes (e.g., elevated engine temperatures $90\,^\circ\text{C} \le T_{\mathrm{eng}} \le 105\,^\circ\text{C}$ coupled with rising thermal trends or equipment-specific SOP advisories) require consulting a corpus of textual operational directives $\mathcal{D}$.
+
+Crucially, haul trucks traverse three communication regimes across open-pit benches: (i)~\texttt{connected}, with nominal low-latency pit-wide telemetry; (ii)~\texttt{degraded}, subject to stochastic packet loss $p_{\mathrm{loss}} \in [0.10, 0.40]$ and round-trip transport delays up to $600\,\text{ms}$; and (iii)~\texttt{isolated}, representing complete wireless disconnection in deep pit zones where $100\%$ of retrieval, inference, and safety verification must execute locally on embedded edge hardware. Formally, given a trajectory prefix $h_t = \langle (s_0, a_0^{\mathrm{exec}}), \dots, (s_t, a_t^{\mathrm{exec}}) \rangle$ and temporal safety specification $\Phi$, the design objective is to maximize Decision Concordance (\textsc{DC}) with the normative ground-truth policy $\pi^*(s_t, \mathcal{D})$ while guaranteeing $h_t \models \Phi$ ($\textsc{SCR} = 100\%$) within a bounded real-time actuation envelope.
+
+\subsection{MCAF Layered OODA Pipeline and MCP Integration}
+As illustrated in Fig.~\ref{fig:mcaf_arch}, MCAF decouples probabilistic cognitive reasoning on general-purpose cores from hard real-time safety enforcement on an isolated \texttt{PREEMPT\_RT} core across four auditable OODA stages:
+
+\begin{figure*}[t]
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tikzpicture}[
+    >=Latex,
+    boxbase/.style={
+        rectangle,
+        rounded corners=3pt,
+        draw=#1,
+        line width=0.75pt,
+        fill=#1!6,
+        align=center,
+        font=\sffamily\scriptsize,
+        inner xsep=4pt,
+        inner ysep=5pt
+    },
+    flowarrow/.style={->, line width=0.85pt, draw=mcafSlate},
+    fastarrow/.style={->, line width=0.9pt, draw=mcafTeal},
+    predarrow/.style={->, line width=0.75pt, densely dashed, draw=mcafBlue!85},
+    compilarrow/.style={->, line width=0.8pt, densely dashed, draw=mcafPurple}
+]
+
+% ==================== ZONAS ARQUITETURAIS DE FUNDO ====================
+\begin{scope}[on background layer]
+    % Zona 1: Continuum de Mineracao
+    \filldraw[rounded corners=5pt, fill=mcafSlate!5, draw=mcafSlate!45, line width=0.7pt]
+        (0.00, 0.25) rectangle (3.20, 8.60);
+    \node[anchor=north, font=\sffamily\bfseries\scriptsize, text=mcafSlate]
+        at (1.60, 8.48) {Mining Pit Continuum};
+
+    % Zona 2: Camada Cognitiva (Cores 0-2)
+    \filldraw[rounded corners=5pt, fill=mcafTeal!5, draw=mcafTeal!55, line width=0.7pt]
+        (3.55, 0.25) rectangle (14.80, 8.60);
+    \node[anchor=north, font=\sffamily\bfseries\scriptsize, text=mcafTeal!90!black]
+        at (9.175, 8.48) {Cognitive Agentic Tier (Cores 0--2: Linux CFS / CUDA or ARMv8.2-A \texttt{SDOT} SIMD)};
+
+    % Zona 3: Camada Hard Real-Time Isolada (Core 3)
+    \filldraw[rounded corners=5pt, fill=mcafAmber!8, draw=mcafAmber!85, line width=0.95pt]
+        (15.25, 0.25) rectangle (19.45, 5.75);
+    \node[anchor=north, align=center, font=\sffamily\bfseries\scriptsize, text=mcafAmber!90!black]
+        at (17.35, 5.64) {Hard-RT Safety Tier\\[-1pt]{\normalfont\sffamily\scriptsize Core 3: \texttt{PREEMPT\_RT}, \texttt{isolcpus=3}}};
+\end{scope}
+
+% ==================== LINHA SUPERIOR: CONTEXTO, PESOS E SINTESE ====================
+\node[boxbase=mcafSlate, minimum width=2.85cm, minimum height=1.80cm, text width=2.62cm]
+    (pit) at (1.60, 6.85) {
+    \textbf{\footnotesize Pit Telemetry}\\[2pt]
+    $T_{\mathrm{brake}}, v, T_{\mathrm{eng}}, \Delta T_{\mathrm{eng}}$\\
+    Cmd $c_{\mathrm{op}}$, Auth $\alpha_{\mathrm{auth}}$\\
+    \texttt{conn.\,|\,degr.\,|\,isol.}
+};
+
+\node[boxbase=mcafTeal, minimum width=3.10cm, minimum height=1.80cm, text width=2.86cm]
+    (mcp) at (5.30, 6.85) {
+    \textbf{\footnotesize MCP-RAG Server}\\[2pt]
+    Local Vector Index\\
+    Top-$2$ SOPs $\mathcal{D}_k$\\
+    $L_{\mathrm{RAG}|\mathrm{SLM}} \approx 31\text{--}34\,\text{ms}$
+};
+
+\node[boxbase=mcafBlue, minimum width=3.25cm, minimum height=1.80cm, text width=3.00cm]
+    (lora) at (9.40, 6.85) {
+    \textbf{\footnotesize MLP-LoRA Adapter}\\[2pt]
+    FP16 Low-Rank \texttt{GGUF}\\
+    Domain Calibration\\
+    SHA-256 Verified
+};
+
+\node[boxbase=mcafSlate, minimum width=2.95cm, minimum height=1.80cm, text width=2.72cm]
+    (vocab) at (13.15, 6.85) {
+    \textbf{\footnotesize Action Space $\mathcal{A}$}\\[2pt]
+    \texttt{continue | cooling}\\
+    \texttt{emerg\_stop | refuse}\\
+    \texttt{maint | reduce\_spd}
+};
+
+\node[boxbase=mcafPurple, dashed, fill=mcafPurple!6, minimum width=3.85cm, minimum height=1.75cm, text width=3.60cm]
+    (offline) at (17.35, 7.45) {
+    \textbf{\footnotesize Offline $\mathrm{LTL}_f$ Synthesis}\\[2pt]
+    5 Rules ($\Phi$) $\xrightarrow{\texttt{MONA}}$ DFAs\\
+    (\ShieldStatesTotal~States, \ShieldEdgesTotal~BDD Edges)\\
+    \texttt{codegen} $\rightarrow$ Static \texttt{guard.c}
+};
+
+% ==================== LINHA CENTRAL: PIPELINE OODA ====================
+\node[boxbase=mcafSlate, minimum width=2.85cm, minimum height=1.95cm, text width=2.62cm]
+    (obs) at (1.60, 3.55) {
+    \textbf{\footnotesize 1. OBSERVE}\\[2pt]
+    State Framing $s_t$\\
+    \& Onboard Register\\
+    Fallback ($L_{\mathrm{obs}}$)
+};
+
+\node[boxbase=mcafTeal, minimum width=3.10cm, minimum height=1.95cm, text width=2.86cm]
+    (orient) at (5.30, 3.55) {
+    \textbf{\footnotesize 2. ORIENT}\\[2pt]
+    Symbolic Prefilter\\
+    \& MCP Query Router\\
+    ($T_{\mathrm{brake}}, v, T_{\mathrm{eng}}, \alpha_{\mathrm{auth}}$)
+};
+
+\node[boxbase=mcafBlue, minimum width=3.25cm, minimum height=1.95cm, text width=3.00cm]
+    (decide) at (9.40, 3.55) {
+    \textbf{\footnotesize 3. DECIDE (SLM)}\\[2pt]
+    Quantized \texttt{Qwen2.5}\\
+    $n_{\mathrm{ctx}}=1024$, $T=0.0$\\
+    KV-Cache Flush ($L_{\mathrm{inf}}$)
+};
+
+\node[boxbase=mcafAmber, minimum width=2.95cm, minimum height=1.95cm, text width=2.72cm]
+    (wd) at (13.15, 3.55) {
+    \textbf{\footnotesize Watchdog}\\[2pt]
+    $\tau_{\mathrm{wd}} = 500\,\text{ms}$ Budget\\
+    If $L_{\mathrm{cog}} > \tau_{\mathrm{wd}}$:\\
+    $a_{\mathrm{wd}} = \texttt{continue\_op}$
+};
+
+\node[boxbase=mcafAmber, fill=white, line width=0.95pt, minimum width=3.80cm, minimum height=1.95cm, text width=3.55cm]
+    (shield) at (17.35, 3.55) {
+    \textbf{\footnotesize 4. ACT: C11 Shield}\\[2pt]
+    \texttt{SCHED\_FIFO} 80, \texttt{mlockall}\\
+    $p_{50}=\CShieldMedianNs$, Max \CShieldRTStressedMaxUs\\
+    Override $a_t^{\mathrm{safe}}$ if $h_t \not\models \Phi$
+};
+
+\node[boxbase=mcafGreen, fill=mcafGreen!8, minimum width=3.80cm, minimum height=1.22cm, text width=3.55cm]
+    (actout) at (17.35, 1.12) {
+    \textbf{\footnotesize Verified OT Actuation}\\[1pt]
+    Safe $a_t^{\mathrm{exec}} \in \mathcal{A}$ ($\textsc{SCR}=100\%$)\\
+    + SHA-256 Fiscal CSV Log
+};
+
+% ==================== CONEXOES E BARRAMENTOS PLANARES ====================
+\draw[flowarrow] (pit.south) -- node[right, font=\sffamily\scriptsize, text=mcafSlate] {Raw} (obs.north);
+\draw[flowarrow] (obs.east) -- node[above, font=\sffamily\scriptsize] {$s_t$} (orient.west);
+
+\draw[flowarrow, draw=mcafTeal] (4.80, 4.53) -- node[left, font=\sffamily\scriptsize, text=mcafTeal!90!black] {Query} (4.80, 5.95);
+\draw[flowarrow, draw=mcafTeal] (5.80, 5.95) -- node[right, font=\sffamily\scriptsize, text=mcafTeal!90!black] {$\mathcal{D}_k$} (5.80, 4.53);
+
+\draw[flowarrow, draw=mcafBlue] (orient.east) --
+    node[above, font=\sffamily\scriptsize, text=mcafBlue] {\texttt{route=slm}}
+    node[below, font=\sffamily\scriptsize, text=mcafSlate] {($82.4\%$)}
+    (decide.west);
+
+\draw[flowarrow, draw=mcafBlue] (lora.south) -- node[right, font=\sffamily\scriptsize, text=mcafBlue] {$\Delta W$} (decide.north);
+\draw[flowarrow, densely dotted] (vocab.south) -- node[right, font=\sffamily\scriptsize, text=mcafSlate] {$\mathcal{A}$} (wd.north);
+
+\draw[flowarrow] (decide.east) -- node[above, font=\sffamily\scriptsize] {$a_t^{\mathrm{prop}}$} (wd.west);
+\draw[flowarrow, draw=mcafAmber!90!black] (wd.east) --
+    node[above, font=\sffamily\scriptsize, text=mcafAmber!90!black] {IPC}
+    (shield.west);
+
+\draw[compilarrow] (offline.south) -- node[right, font=\sffamily\scriptsize, text=mcafPurple] {\texttt{gcc -O3}} (17.35, 5.75);
+
+\draw[fastarrow] (5.30, 2.57) -- (5.30, 1.68) --
+    node[above, pos=0.47, font=\sffamily\scriptsize, text=mcafTeal!90!black]
+    {\texttt{route=prefilter} --- Fast Symbolic Emergency Bypass ($\approx 17.6\%$ cycles, $\approx 0.1\,\text{ms}$)}
+    (14.95, 1.68) -- (14.95, 3.15) -- (15.45, 3.15);
+
+\draw[predarrow] (1.60, 2.57) -- (1.60, 0.78) --
+    node[above, pos=0.50, font=\sffamily\scriptsize, text=mcafBlue!90!black]
+    {Atomic Telemetry \& Auth Predicates $p(s_t)$ for Multi-Cycle $\mathrm{LTL}_f$ DFA Evaluation}
+    (15.12, 0.78) -- (15.12, 2.78) -- (15.45, 2.78);
+
+\draw[flowarrow, draw=mcafGreen, line width=1.0pt] (shield.south) --
+    node[right, font=\sffamily\scriptsize\bfseries, text=mcafGreen] {$a_t^{\mathrm{exec}}$}
+    (actout.north);
+
+\end{tikzpicture}%
+}
+\caption{End-to-end neuro-symbolic architecture of the Mine-Continuum Agentic Framework (MCAF), decoupling MCP-mediated neural RAG and \texttt{MLP-LoRA} cognitive reasoning on general-purpose cores (Cores~0--2) from \texttt{MONA}-synthesized, zero-allocation ANSI~C11 $\mathrm{LTL}_f$ runtime shielding pinned to an isolated \texttt{PREEMPT\_RT} core (Core~3).}
+\label{fig:mcaf_arch}
+\end{figure*}
+
+\subsubsection{Observe (Telemetry Framing and Connectivity Resilience)}
+The observation adapter normalizes raw sensor registers and operator frames into the canonical schema of~\eqref{eq:state_vector}. Under \texttt{degraded} or \texttt{isolated} regimes, unavailable remote dispatch metadata gracefully falls back to onboard state registers without blocking execution, recording the observation overhead $L_{\mathrm{obs}}$.
+
+\subsubsection{Orient (Symbolic Prefiltering and MCP-Mediated Neural RAG)}
+Before invoking neural computation, a deterministic symbolic prefilter evaluates immediate hard-threshold emergencies ($T_{\mathrm{brake}} > 200\,^\circ\text{C}$, $T_{\mathrm{eng}} > 105\,^\circ\text{C}$, or unauthorized critical overrides). Cycles matching an unambiguous emergency bypass the cognitive tier directly (\texttt{route = prefilter}) in $\approx 0.1\,\text{ms}$. For the remaining $\approx 82.4\%$ of operational cycles requiring contextual arbitration (\texttt{route = slm}), MCAF invokes an embedded context server structured around the Model Context Protocol (MCP)~\cite{mcp2024}. In the \texttt{Hybrid+RAG} configuration, the orientation module encodes the equipment identifier and telemetry band into a dense query vector to retrieve the top-$k$ ($k=2$) relevant SOP directives from a local vector index, incurring orientation latency $L_{\mathrm{orient}}$.
+
+\subsubsection{Decide (Zero-Cache Quantized SLM with \texttt{MLP-LoRA})}
+The telemetry summary and retrieved directives are formatted into a structured ChatML prompt bounded to $n_{\mathrm{ctx}} = 1024$ tokens and passed to an onboard quantized \texttt{Qwen2.5} instruction-tuned SLM~\cite{qwen25} executed via \texttt{llama.cpp}. Sampling is strictly deterministic ($T = 0.0$, greedy argmax) with generation capped at $16$ tokens. To eliminate cross-cycle state contamination, the key-value (KV) cache is explicitly cleared prior to every cycle so that each decision depends solely on $(s_t, \mathcal{D}_k)$. Because zero-shot sub-3B models struggle to reconcile retrieved textual directives with strict action identifiers, we train a compact low-rank adapter (\texttt{MLP-LoRA}, exported in FP16 \texttt{GGUF}) targeting transformer projection matrices, aligning latent directive representations with $\mathcal{A}$ without merging or duplicating base quantized weights.
+
+\subsubsection{Act (Supervisory Watchdog and Formal Runtime Shield)}
+Cognitive execution time $L_{\mathrm{cog}} = L_{\mathrm{obs}} + L_{\mathrm{orient}} + L_{\mathrm{inf}}$ is governed by a supervisory watchdog timer with budget $\tau_{\mathrm{wd}}$ ($500\,\text{ms}$ default). Whenever $L_{\mathrm{cog}} > \tau_{\mathrm{wd}}$, the watchdog preempts or discards the late neural proposal $a_t^{\mathrm{prop}}$ and substitutes a conservative default proposal $a_{\mathrm{wd}} = \texttt{continue\_operation}$. Regardless of whether $a_t^{\mathrm{prop}}$ originates from the symbolic prefilter, the SLM, or the watchdog fallback, it must pass through the formal $\mathrm{LTL}_f$ runtime shield before physical actuation, yielding total cycle latency:
+\begin{equation}
+    L_{\mathrm{tot}} = L_{\mathrm{obs}} + L_{\mathrm{orient}} + L_{\mathrm{inf}} + L_{\mathrm{shield}}.
+    \label{eq:latency_decomp}
+\end{equation}
+
+\subsection{Formal $\mathrm{LTL}_f$ Shield Synthesis and Zero-Allocation ANSI C11 Lowering}
+Syntactic output constraints such as \texttt{GBNF} only enforce $a_t^{\mathrm{prop}} \in \mathcal{A}$; they are blind to physical state predicates and multi-cycle temporal obligations. MCAF enforces operational safety by specifying five formal rules $\Phi = \bigwedge_{i=1}^{5} \varphi_i$ in Linear Temporal Logic over Finite Traces ($\mathrm{LTL}_f$)~\cite{degiacomo2013ltlf} over atomic propositions derived from $s_t$ and $\mathcal{A}$. These rules encode both instantaneous safety invariants---mandating \texttt{emergency\_stop} under critical brake or engine thermal thresholds, \texttt{reduce\_speed} under hazardous overspeed, and \texttt{refuse\_operation} upon unauthenticated operator commands ($\neg \alpha_{\mathrm{auth}}$)---and temporal weak-until ($\mathcal{W}$) obligations governing post-hazard recovery across consecutive cycles.
+
+Offline, our synthesis pipeline (\texttt{compile\_shield.py}) translates each $\mathrm{LTL}_f$ formula $\varphi_i$ into First-Order Logic over finite words and invokes the \texttt{MONA} WS1S decision procedure~\cite{klarlund2001mona} to construct minimal, canonical Deterministic Finite Automata (DFA) $\mathcal{M}_i = (Q_i, \Sigma, \delta_i, q_{0,i}, F_i)$. Across the five safety specifications, \texttt{MONA} synthesis yields a compact bank of automata comprising \ShieldStatesTotal~total states and \ShieldEdgesTotal~symbolic Binary Decision Diagram (BDD) transition edges (\texttt{compiled\_shield.json}). At runtime, given current state vector $q_t = (q_{t,1}, \dots, q_{t,5})$ and telemetry predicates $p(s_t)$, the shield evaluates $\delta_i(q_{t,i}, p(s_t) \cup \{a_t^{\mathrm{prop}}\})$ for all $i \in \{1,\dots,5\}$. If every automaton transitions to a non-violating state capable of reaching $F_i$, the shield emits $a_t^{\mathrm{exec}} = a_t^{\mathrm{prop}}$; otherwise, it deterministically overrides the unsafe proposal with the highest-priority safe action $a_t^{\mathrm{safe}} \in \mathcal{A}$ satisfying all five automata simultaneously.
+
+To guarantee hard real-time execution decoupled from Python garbage collection and Linux CFS scheduling jitter, \texttt{codegen\_c\_guard.py} compiles \texttt{compiled\_shield.json} into a standalone, zero-allocation ANSI~C11 module (\texttt{c\_guard/guard.c}). State transitions are encoded as flat, cache-resident lookup tables indexed by packed integer bitmasks, requiring zero dynamic heap allocations (\texttt{malloc}-free) and zero floating-point operations along the transition path. For bare-metal edge deployment on the Raspberry Pi~5, the C11 shield process locks all virtual pages into physical RAM via \texttt{mlockall(MCL\_CURRENT | MCL\_FUTURE)}, pins execution affinity exclusively to Cortex-A76 core~3 (\texttt{isolcpus=3 nohz\_full=3 rcu\_nocbs=3 irqaffinity=0-2}), and executes under POSIX real-time priority \texttt{SCHED\_FIFO}~80 on a \texttt{PREEMPT\_RT} kernel.
+
+\subsection{Experimental Protocol, Hardware Testbeds, and Fiscal Auditing}
+Table~\ref{tab:config} summarizes the default system parameters automatically generated from \texttt{mcaf/config.py}. Five controller architectures are evaluated under identical random seeds ($S = \{42, 101, 202, 303, 404\}$) to ensure exact cycle-by-cycle situation pairing: (1)~\texttt{Prefilter-only} (symbolic baseline with $\mathrm{LTL}_f$ shield), (2)~\texttt{Pure-SLM} (unshielded SLM), (3)~\texttt{Pure-SLM+GBNF} (unshielded grammar-constrained SLM), (4)~\texttt{Hybrid} (shielded SLM without RAG), and (5)~\texttt{Hybrid+RAG} (full MCP-RAG neuro-symbolic MCAF pipeline).
 
 \input{tables/table_config.tex}
-\end{sec}
 
-\begin{sec}{III. EXPERIMENTAL RESULTS AND DISCUSSION}
+Experiments span two physical hardware platforms across the computing continuum:
+\begin{itemize}
+    \item \textbf{Desktop Evaluation Testbed ($\text{x86\_64}$ / CUDA):} Equipped with an NVIDIA GeForce RTX~3050 GPU ($4\,\text{GB}$ VRAM), executing $\TotalDesktopCycles$ supervisory cycles across $480$ experimental cells ($1{,}000$ cycles per cell) covering six campaigns: baseline connectivity (\texttt{exp1\_base}), model scale and quantization (\texttt{exp2\_scale}: \texttt{0.5B}, \texttt{1.5B}, and \texttt{3B} across \texttt{Q4\_K\_M} and \texttt{Q8\_0}), few-shot prompting vs.\ \texttt{GBNF} (\texttt{exp3\_fewshot}), \texttt{MLP-LoRA} ablation (\texttt{exp3\_lora}), live watchdog enforcement (\texttt{exp4\_watchdog\_live}), and network/hazard sensitivity plus action-space richness sweeps (\texttt{exp5\_sen\-si\-tiv\-i\-ty} and \texttt{exp6\_rich\-ness}). Models up to \texttt{3B-Q4\_K\_M} are fully offloaded to VRAM (\texttt{n\_gpu\_layers=-1}), whereas \texttt{3B-Q8\_0} utilizes hybrid partitioning ($28$ GPU layers) due to the $4\,\text{GB}$ VRAM ceiling.
+    \item \textbf{Embedded Edge Testbed (Raspberry Pi~5 / ARM64):} Equipped with a quad-core Arm Cortex-A76 SoC ($2.6\,\text{GHz}$, \texttt{performance} governor, active cooling) and $8\,\text{GB}$ LPDDR4X RAM running Debian~13 (Trixie), executing $\TotalPiCycles$ zero-cache supervisory cycles across $155$ cells (\texttt{n\_threads=4}, real hardware network sleep enabled) plus $\TotalCShieldCycles$ C11 shield verification cycles ($5 \times 10^7$) comparing the standard \texttt{6.18.34+rpt-rpi-2712} (\texttt{PREEMPT}) kernel against the official \texttt{6.18.50+rpt-rpi-v8-rt} (\texttt{PREEMPT\_RT}) kernel under concurrent \texttt{stress-ng} CPU, virtual memory, and I/O load on cores~0--2.
+\end{itemize}
+
+All seven \texttt{GGUF} model and adapter artifacts are locked via SHA-256 cryptographic manifests, and $100\%$ of the $635$ raw CSV logs undergo automated integrity verification (\texttt{sanity\_check.py}) to confirm schema completeness, monotonic cycle indexing, zero NaN/null fields, and bit-exact equivalence between the Python and ANSI~C11 runtime shields. Decision Concordance (\textsc{DC}) is reported as the five-seed mean with $95\%$ Student-$t$ confidence intervals ($df=4$), while controller differences are evaluated via cycle-paired McNemar tests against \texttt{Prefilter-only}.
+
+\section{EXPERIMENTAL RESULTS AND DISCUSSION}
+\label{sec:results}
 
 \subsection{Baseline Comparison Across Connectivity Scenarios}
-Table~\ref{tab:exp1_main} details the performance of baseline controllers across connected, degraded, and isolated network topologies over $\TotalDesktopCycles$ experimental cycles.
+Table~\ref{tab:exp1_main} reports the baseline performance of all five controller architectures across \texttt{connected}, \texttt{degraded}, and \texttt{isolated} pit regimes using zero-shot \texttt{Qwen2.5-0.5B-Q4\_K\_M}. Across all three connectivity profiles, the purely symbolic \texttt{Prefilter-only} baseline achieves Decision Concordance (\textsc{DC}) between $80.5\%$ and $82.1\%$ with an invariant $\textsc{SCR} = 100.0\%$ and sub-millisecond execution ($p_{95} = 0.1\,\text{ms}$ on both desktop GPU and Raspberry Pi~5). This $\approx 80.5\%$--$82.1\%$ plateau reflects the structural observability ceiling of memoryless threshold rules: while hard-threshold emergencies ($\approx 17.6\%$ of cycles) and nominal operations are resolved deterministically, the remaining contextual warning states depend on equipment-specific Standard Operating Procedures (SOPs) invisible to static PLC interlocks.
 
 \input{tables/table_exp1_main.tex}
 
+Removing the formal runtime shield exposes severe operational hazards. Unshielded \texttt{Pure-SLM} degrades significantly in concordance ($61.4\%$--$62.9\%$, paired McNemar $p < 10^{-99}$) and violates physical or authorization invariants in nearly one-fifth of all cycles ($\textsc{SCR} \in [80.8\%, 81.3\%]$). Enforcing syntactic output validity via Backus--Naur grammars (\texttt{Pure-SLM+GBNF}) yields the exact same \textsc{DC} and unsafe \textsc{SCR} as unconstrained \texttt{Pure-SLM}, while inflating desktop GPU $p_{95}$ latency by up to $5.7\times$ (from $33.1\,\text{ms}$ to $189.8\,\text{ms}$ in \texttt{isolated}) and adding $\approx 95$--$100\,\text{ms}$ per cycle on the Cortex-A76 CPU ($p_{95} = 1142.0\,\text{ms}$ vs.\ $1043.0\,\text{ms}$). This result empirically confirms that token-level grammar masks only prevent malformed strings ($a_t^{\mathrm{prop}} \notin \mathcal{A}$) while remaining blind to state-dependent and temporal safety obligations.
+
+Coupling the unadapted SLM with the $\mathrm{LTL}_f$ shield without document retrieval (\texttt{Hybrid}) restores $\textsc{SCR} = 100.0\%$ and matches \texttt{Prefilter-only} identically ($p = 1.0000$), because zero-shot \texttt{0.5B} defaults to \texttt{continue\_operation} outside critical bands. Conversely, activating MCP retrieval in zero-shot mode (\texttt{Hybrid+RAG}) preserves $100.0\%$ safety but reduces \textsc{DC} to $37.1\%$--$38.6\%$ ($p < 10^{-99}$), accompanied by an embedded $p_{95}$ latency increase to $2959.7$--$3092.6\,\text{ms}$ due to prompt prefill expansion. Inspection of zero-shot traces reveals a systematic calibration failure: when exposed to cautionary keywords inside retrieved SOP passages, unadapted sub-3B models over-trigger conservative actions (\texttt{reduce\_speed} or \texttt{schedule\_maintenance}) even when telemetry trends are stable.
+
 \subsection{Model Scale and Quantization Metrology on Raspberry Pi 5}
-Evaluating scale and quantization trade-offs on the extreme edge (Raspberry Pi 5) reveals the memory footprint and SIMD vectorization efficiency of Qwen2.5 models, as reported in Table~\ref{tab:exp2_scale} and visualized in Fig.~\ref{fig:scale}.
+To evaluate whether parameter scaling alone resolves zero-shot RAG miscalibration and to quantify edge hardware limits, Table~\ref{tab:exp2_scale} and Fig.~\ref{fig:scale} present the scale and quantization sweep across \texttt{0.5B}, \texttt{1.5B}, and \texttt{3B} models under \texttt{Q4\_K\_M} and \texttt{Q8\_0} formats on the Raspberry Pi~5 (\texttt{isolated} regime). Increasing model capacity without domain adaptation fails to improve zero-shot \texttt{Hybrid+RAG} concordance: both \texttt{0.5B} and \texttt{1.5B} plateau at $38.6\%$, whereas \texttt{3B-Q4\_K\_M} ($23.3\%$) and \texttt{3B-Q8\_0} ($26.3\%$) exhibit even stronger conservative bias when interpreting multi-clause SOP advisories, although the $\mathrm{LTL}_f$ shield maintains $\textsc{SCR} = 100.0\%$ across every model.
 
 \input{tables/table_exp2_pi_scale.tex}
 
 \begin{figure*}[t]
 \centering
 \includegraphics[width=0.95\textwidth]{figures/fig1_pi5_scale_latency_rss.pdf}
-\caption{Model scale and quantization metrology on Raspberry Pi 5: (a) End-to-end inference latency ($p50$ and $p95$ whiskers); (b) Peak resident memory footprint (RSS) against the 8 GB board limit.}
+\caption{Model scale and quantization metrology on Raspberry Pi~5 (\texttt{Hybrid+RAG}, isolated): (a)~End-to-end cycle latency ($p_{50}$ bars with $p_{95}$ whiskers); (b)~Peak resident memory footprint (RSS) relative to the $8\,\text{GB}$ LPDDR4X board limit.}
 \label{fig:scale}
 \end{figure*}
 
+On the embedded Cortex-A76 processor, local MCP vector retrieval overhead ($L_{\mathrm{RAG}|\mathrm{SLM}}$ $p_{50}$) remains tightly bounded between $31.1\,\text{ms}$ and $33.9\,\text{ms}$, confirming that neural inference dominates cognitive latency. Crucially, Table~\ref{tab:exp2_scale} uncovers a pronounced microarchitectural alignment phenomenon at the \texttt{0.5B} scale: 8-bit block quantization (\texttt{Qwen2.5-0.5B-Q8\_0}) achieves a conditional inference median of $1041.0\,\text{ms}$ ($L_{\mathrm{tot}}$ $p_{95} = 1149.2\,\text{ms}$), executing $2.16\times$ faster than its 4-bit superblock counterpart \texttt{0.5B-Q4\_K\_M} ($2247.9\,\text{ms}$ median, $p_{95} = 2897.2\,\text{ms}$) while operating $6.0\,^\circ\text{C}$ cooler ($41.4\,^\circ\text{C}$ vs.\ $47.4\,^\circ\text{C}$) with a modest $485\,\text{MB}$ RSS increase ($1893\,\text{MB}$ vs.\ $1408\,\text{MB}$). This inversion stems from SIMD register geometry on ARMv8.2-A: \texttt{Qwen2.5-0.5B} employs a hidden dimension $d_{\mathrm{model}} = 896$, which partitions evenly into twenty-eight 32-weight \texttt{Q8\_0} blocks mapped directly onto hardware \texttt{SDOT} int8 dot-product instructions, whereas \texttt{Q4\_K\_M} relies on 256-weight superblocks ($896 / 256 = 3.5$) that trigger scalar tail loops, nibble unpacking, and hierarchical scale dequantization. At \texttt{1.5B} ($d_{\mathrm{model}} = 1536 = 6 \times 256$) and \texttt{3B} ($d_{\mathrm{model}} = 2048 = 8 \times 256$), superblock alignment is exact and LPDDR4X memory bandwidth becomes the primary bottleneck, restoring the expected latency advantage of \texttt{Q4\_K\_M} ($4160.2\,\text{ms}$ vs.\ $4808.0\,\text{ms}$ at \texttt{1.5B}; $8481.7\,\text{ms}$ vs.\ $11149.5\,\text{ms}$ at \texttt{3B}). Peak resident memory reaches $7178\,\text{MB}$ for \texttt{3B-Q8\_0} (Fig.~\ref{fig:scale}b), leaving minimal headroom below the $8\,\text{GB}$ board limit, while active cooling prevents thermal throttling across all runs ($T_{\max} \le 47.4\,^\circ\text{C}$).
+
+Cycle-paired cross-architectural auditing between desktop CUDA ($\text{x86\_64}$) and embedded ARM64 confirms $100.0\%$ executed-action identity across all $1{,}000$ paired cycles of the \texttt{0.5B} and \texttt{1.5B} models ($250$ cycles per variant). Minor divergence emerges only in uncalibrated \texttt{3B-Q4\_K\_M} ($98.8\%$) and hybrid-offloaded \texttt{3B-Q8\_0} ($93.2\%$), where near-tied argmax logits on ambiguous boundary states flip under non-associative floating-point reductions across \texttt{CUDA}/\texttt{AVX2} and \texttt{ARM NEON} pipelines—while still maintaining $100.0\%$ safety compliance on both platforms.
+
 \subsection{Domain Adaptation and MLP-LoRA Ablation}
-Table~\ref{tab:exp3_lora} and Fig.~\ref{fig:lora} present the ablation results for zero-shot, few-shot, and LoRA-adapted configurations, confirming cross-architectural reproducibility between desktop CUDA and ARM64 edge hardware.
+Table~\ref{tab:exp3_lora} and Fig.~\ref{fig:lora} isolate the contribution of each architectural component on \texttt{Qwen2.5-0.5B-Q4\_K\_M} in the fully \texttt{isolated} six-action directive regime. Providing five in-context demonstrations (\texttt{Hybrid+RAG}, 5-Shot) yields a statistically negligible shift from $38.6\%$ to $39.5\%$ \textsc{DC}, demonstrating that prompt engineering alone cannot align sub-1B attention heads with conditional equipment directives. Conversely, applying our low-rank adapter without document retrieval (\texttt{Hybrid + MLP-LoRA}, No RAG) raises \textsc{DC} to $80.3\%$ [$77.4, 83.1$] with $p_{95} = 1125.0\,\text{ms}$ on the Pi~5 and $100.00\%$ CUDA--ARM64 identity, converging to the exact informational bound of \texttt{Prefilter-only} ($80.5\%$, differing on only $12$ out of $5{,}000$ cycles, $p = 4.88 \times 10^{-4}$). This confirms that without MCP-mediated access to $\mathcal{D}$, even a domain-tuned neural policy cannot infer latent equipment-specific maintenance rules.
 
 \input{tables/table_exp3_lora_ablation.tex}
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.48\textwidth]{figures/fig2_lora_ablation.pdf}
-\caption{Domain adaptation ablation showing decision concordance and safety concordance ratio ($\textsc{SCR}$) across prompt adaptation and LoRA strategies.}
+\includegraphics[width=\columnwidth]{figures/fig2_lora_ablation.pdf}
+\caption{Domain adaptation ablation on \texttt{Qwen2.5-0.5B-Q4\_K\_M} (isolated, 6~actions), comparing Decision Concordance (\textsc{DC}) and Safety Concordance Ratio (\textsc{SCR}) across symbolic, prompting, and \texttt{MLP-LoRA} configurations.}
 \label{fig:lora}
 \end{figure}
 
+When \texttt{MLP-LoRA} is combined with local MCP retrieval (\texttt{Hybrid+RAG + MLP-LoRA}), MCAF breaks through both the symbolic ceiling and zero-shot RAG degradation, reaching {\LoRAHybridRAGDC} \textsc{DC} ($95\%$ CI: $[93.7\%, 94.8\%]$, $p = 2.66 \times 10^{-89}$ vs.\ \texttt{Prefilter-only})—a $+13.8$ percentage-point gain over symbolic control and $+55.7$ percentage points over zero-shot \texttt{Hybrid+RAG}—while preserving an unbroken $\textsc{SCR} = 100.0\%$. Crucially, ablating the formal $\mathrm{LTL}_f$ shield from the adapted model (\texttt{Pure-SLM + MLP-LoRA}) causes \textsc{DC} to drop to $79.2\%$ and reintroduces $55$ safety violations across $5{,}000$ cycles ($\textsc{SCR} = 98.9\%$). Thus, parameter-efficient adaptation and formal runtime verification are strictly complementary: \texttt{MLP-LoRA} unlocks contextual SOP concordance, whereas the \texttt{MONA}-synthesized shield eliminates residual neural tail risk. Across all $1{,}500$ paired embedded \texttt{MLP-LoRA} cycles ($500$ per controller in \texttt{Hybrid}, \texttt{Hybrid+RAG}, and \texttt{Pure-SLM}), sharp logit separation yields {\CrossArchLoRAIdentity} execution identity ($1{,}499/1{,}500$ cycles) between RTX~3050 CUDA and Raspberry Pi~5 ARM64.
+
 \subsection{Supervisory Watchdog Performance and Trade-Offs}
-Table~\ref{tab:exp4_watchdog} and Fig.~\ref{fig:watchdog} illustrate the degradation profile and fallback rates under open-loop sweeps and closed-loop live watchdog budgets (500\,ms).
+Because embedded SLM prefill and decoding require $1$--$3\,\text{s}$ on ARM64 CPUs, supervisory controllers must guarantee safe actuation when operational deadlines are tighter than neural inference latency. Table~\ref{tab:exp4_watchdog} and Fig.~\ref{fig:watchdog} characterize MCAF across supervisory watchdog budgets $\tau_{\mathrm{wd}} \in [250, 4000]\,\text{ms}$ on the Raspberry Pi~5 ($N=500$ cycles per row). For $\tau_{\mathrm{wd}} \ge 3500\,\text{ms}$, zero timeouts occur ($\text{WD} = 0.0\%$), preserving full neuro-symbolic concordance ($94.2\%$ [$91.2, 97.2$] on the $500$-cycle embedded cohort). Tightening $\tau_{\mathrm{wd}}$ to $3000\,\text{ms}$ intercepts the slowest $59.4\%$ of RAG-augmented cycles, gracefully interpolating \textsc{DC} to $84.6\%$.
 
 \input{tables/table_exp4_watchdog.tex}
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.48\textwidth]{figures/fig3_watchdog_tradeoff_pi5.pdf}
-\caption{Supervisory watchdog budget trade-offs on Raspberry Pi 5 comparing fallback frequency, decision concordance, and safety invariance.}
+\includegraphics[width=\columnwidth]{figures/fig3_watchdog_tradeoff_pi5.pdf}
+\caption{Supervisory watchdog budget trade-off on Raspberry Pi~5 (\texttt{Hybrid+RAG}), illustrating smooth concordance interpolation above the symbolic baseline and invariant $100.0\%$ safety compliance.}
 \label{fig:watchdog}
 \end{figure}
 
+Under strict sub-second budgets ($\tau_{\mathrm{wd}} \in [250, 2000]\,\text{ms}$), all $82.4\%$ cognitive-tier invocations on \texttt{0.5B-Q4\_K\_M} exceed $\tau_{\mathrm{wd}}$ and revert to $a_{\mathrm{wd}} = \texttt{continue\_operation}$ prior to shield verification, while the $17.6\%$ acute emergencies routed through the symbolic prefilter complete in $\approx 0.1\,\text{ms}$. Consequently, \textsc{DC} converges smoothly to a floor of $82.8\%$ [$77.0, 88.6$]—never falling below the symbolic baseline—and exactly matches the closed-loop live enforcement campaign at $\tau_{\mathrm{wd}} = 500\,\text{ms}$ ($\text{WD} = 82.4\%$, $\textsc{DC} = 82.8\%$, $\textsc{SCR} = 100.0\%$). Furthermore, cross-referencing Table~\ref{tab:exp2_scale} reveals an immediate hardware--algorithmic co-design optimization: deploying the \texttt{MLP-LoRA} adapter on SIMD-aligned \texttt{Qwen2.5-0.5B-Q8\_0} ($p_{99} = 1181.4\,\text{ms}$) lowers the zero-timeout supervisory budget on Raspberry Pi~5 from $3500\,\text{ms}$ to $\approx 1200\,\text{ms}$.
+
 \subsection{Determinism and Real-Time Latency of the ANSI C Shield}
-Table~\ref{tab:c_shield_rt} and Fig.~\ref{fig:rt} document the execution jitter of $\TotalCShieldCycles$ evaluations of the MONA-compiled ANSI C shield across standard and $\textsc{Preempt\_RT}$ kernels with core isolation ($\text{isolcpus}=3$).
+To verify that the final safety barrier remains deterministic regardless of cognitive-tier load, Table~\ref{tab:c_shield_rt} and Fig.~\ref{fig:rt} report the execution metrology of the \texttt{MONA}-compiled ANSI~C11 shield across {\TotalCShieldCycles} verification cycles ($10^7$ cycles per scheduling regime) on Raspberry Pi~5 core~3. Because all \ShieldStatesTotal~automaton states and \ShieldEdgesTotal~symbolic edges compile into flat, static lookup tables locked in physical memory (\texttt{mlockall}), nominal execution is invariant across all five regimes: median latency ($p_{50}$) is \CShieldMedianNs, $p_{99}$ is $75\,\text{ns}$, and $p_{99.99}$ is \CShieldPFourNinesNs, confirming continuous L1 cache residency with zero dynamic allocation jitter.
 
 \input{tables/table_c_shield_rt.tex}
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.48\textwidth]{figures/fig4_c_shield_rt_tail.pdf}
-\caption{Tail latency distribution ($p99.99$ vs. worst-case observed) of the MONA-compiled ANSI C runtime guard across scheduling regimes.}
+\includegraphics[width=\columnwidth]{figures/fig4_c_shield_rt_tail.pdf}
+\caption{Verification latency tail ($p_{99.99}$ vs.\ worst-case observed over $10^7$ cycles) of the \texttt{MONA}-compiled ANSI~C11 shield across standard and \texttt{PREEMPT\_RT} scheduling regimes on Raspberry Pi~5.}
 \label{fig:rt}
 \end{figure}
 
-\end{sec}
+Tail latency above $p_{99.99}$, however, is governed by OS kernel preemption and core isolation. Under standard Linux CFS scheduling (\texttt{SCHED\_OTHER}, idle), background kernel threads induce worst-case spikes reaching \CShieldStdMaxUs. Elevating task priority to \texttt{SCHED\_FIFO}~80 on the standard kernel lowers idle worst-case latency to $13.72\,\mu\text{s}$, but concurrent CPU, virtual memory, and I/O stress (\texttt{stress-ng} on cores~0--2) inflates the tail back to $18.63\,\mu\text{s}$ due to non-preemptible kernel sections and shared interrupt handling. Transitioning to the real-time \texttt{6.18.50+rpt-rpi-v8-rt} (\texttt{PREEMPT\_RT}) kernel with dedicated core isolation (\texttt{isolcpus=3 nohz\_full=3 rcu\_nocbs=3 irqaffinity=0-2}) bounds worst-case verification latency to $15.37\,\mu\text{s}$ when idle and \CShieldRTStressedMaxUs\ under full \texttt{stress-ng} contention—a $5.19\times$ reduction relative to standard scheduling and a $2.00\times$ reduction relative to stressed \texttt{SCHED\_FIFO} on the non-RT kernel. Notably, the stressed \texttt{PREEMPT\_RT} tail (\CShieldRTStressedMaxUs) is lower than the idle \texttt{PREEMPT\_RT} tail ($15.37\,\mu\text{s}$) because sustained activity on cores~0--2 prevents the shared L3 cache and SoC interconnect from entering deep low-power idle states while core~3 remains completely shielded from timer ticks, RCU callbacks, and I/O interrupts. Even at its worst observed spike (\CShieldRTStressedMaxUs), formal shield verification consumes less than $0.1\%$ of a typical $10\,\text{ms}$ PLC scan cycle.
 
-\begin{sec}{IV. CONCLUSION}
-The MCAF architecture successfully reconciles neuro-symbolic SLM autonomy with hard real-time safety in autonomous mining systems. Future work will extend MCAF to multi-agent decentralized coordination fleets under adversarial wireless constraints.
-\end{sec}
+\subsection{Environmental Sensitivity and Task-Richness Scaling}
+Finally, Table~\ref{tab:exp5_exp6} summarizes the remaining $250{,}000$ desktop supervisory cycles across the environmental sensitivity (\texttt{exp5\_sensitivity}, $120{,}000$ cycles) and task-richness (\texttt{exp6\_richness}, $130{,}000$ cycles) campaigns. Sweeping degraded round-trip transport latency across $\{50, 300, 600\}\,\text{ms}$ and packet loss across $\{0.0, 0.10, 0.20, 0.40\}$ produces zero variance in either \texttt{Prefilter-only} ($\textsc{DC} = 82.1\%$) or zero-shot \texttt{Hybrid+RAG} ($\textsc{DC} = 37.1\%$), with $\textsc{SCR} = 100.0\%$ throughout, confirming that onboard state
 
-\begin{thebibliography}{1}
-\bibitem{ref1} B. H. N. Andrade and R. A. R. Oliveira, ``Towards Resilient Agentic Mining: An Architectural Framework using Model Context Protocol and Deterministic Safety Guardrails,'' in \emph{Proc. ICEIS AXPRO}, 2026.
+\section{THREATS TO VALIDITY AND LIMITATIONS}
+\label{sec:threats}
+
+\subsection{Internal and Construct Validity}
+Two primary threats to internal validity in embedded neuro-symbolic benchmarks are cross-cycle context leakage and operating-system scheduling interference. To eliminate state contamination across consecutive cycles, MCAF explicitly flushes the \texttt{llama.cpp} KV-cache prior to every prompt evaluation and enforces deterministic greedy decoding ($T = 0.0$). Across both $\text{x86\_64}$/CUDA and ARM64 platforms, all seven \texttt{GGUF} model and adapter weights were cryptographically locked via SHA-256 manifests, and identical pseudo-random seeds ($S = \{42, 101, 202, 303, 404\}$) guaranteed exact cycle-by-cycle situation pairing across controllers. Furthermore, $100\%$ of the $635$ generated CSV logs ({\TotalDesktopCycles} desktop cycles and {\TotalPiCycles} Raspberry Pi~5 cycles) passed automated fiscal verification for schema completeness, monotonic indexing, and bit-exact action equivalence between the Python reference monitor and the ANSI~C11 shield.
+
+Regarding construct validity, Decision Concordance (\textsc{DC}) measures alignment with a codified ground-truth supervisory policy $\pi^*(s_t, \mathcal{D})$, while the Safety Concordance Ratio (\textsc{SCR}) evaluates satisfaction of the formal $\mathrm{LTL}_f$ specification $\Phi$. A subtle instrumentation detail arises in the closed-loop Python watchdog campaign (\texttt{exp4\_watchdog\_live}): because synchronous C++ FFI bindings in \texttt{llama.cpp} complete token evaluation before returning control to the Python caller, the benchmark harness records the true underlying cognitive duration ($p_{95} = 2782.0\,\text{ms}$) and applies logical deadline preemption whenever $L_{\mathrm{cog}} > 500\,\text{ms}$. In production deployment, true asynchronous preemption is achieved by running the MCP/SLM cognitive agent on cores~0--2 while isolating the compiled ANSI~C11 watchdog and $\mathrm{LTL}_f$ shield on core~3 via shared-memory inter-process communication (IPC).
+
+\subsection{External Validity and Operational Limitations}
+First, telemetry trajectories, thermal trends, and wireless degradation profiles were generated by a parameterized discrete-time situation simulator rather than physical Controller Area Network (CAN/SAE~J1939) bus traffic on an active haul truck. Although the state schema reflects realistic AHS supervisory variables (brake and coolant thermal envelopes, haul speed, and command authentication), field validation via Hardware-in-the-Loop (HIL) benches and mine-site telemetry replay remains a necessary step prior to in-pit commissioning.
+
+Second, embedded cognitive latency imposes a clear timescale boundary. Even when leveraging ARMv8.2-A \texttt{SDOT} alignment on \texttt{Qwen2.5-0.5B-Q8\_0} ($p_{95} = 1149.2\,\text{ms}$) or \texttt{0.5B-Q4\_K\_M + MLP-LoRA} ($p_{95} = 3241.9\,\text{ms}$), autoregressive SLM inference operates at a $1$--$3.5\,\text{s}$ supervisory cadence. Consequently, the cognitive tier is strictly suited for high-level tactical arbitration (cooling activation, speed-band selection, maintenance scheduling, and override authorization) and cannot replace millisecond-rate inner servo loops (hydraulic braking pressure or steering angle control), which must remain governed by deterministic PLCs and the {\CShieldRTStressedMaxUs} ANSI~C11 shield.
+
+Third, formal guarantees are bounded by specification completeness (\emph{what is not formalized is not shielded}). Our current \texttt{MONA}-compiled automaton bank encodes five core $\mathrm{LTL}_f$ rules (\ShieldStatesTotal~states and \ShieldEdgesTotal~symbolic edges) over crisp sensor thresholds; perceptual uncertainties—such as LiDAR dust occlusion or camera-based obstacle misclassification—are not directly mitigated unless mapped onto conservative state predicates upstream of the shield. Finally, the present evaluation focuses on single-truck autonomy rather than multi-vehicle fleet negotiation.
+
+\section{CONCLUSION}
+\label{sec:conclusion}
+This paper presented and empirically validated the \emph{Mine-Continuum Agentic Framework} (MCAF), a neuro-symbolic supervisory control architecture designed to reconcile contextual SLM adaptability with hard real-time operational safety in autonomous mining haulage. By decoupling MCP-mediated local document retrieval and domain-adapted SLM reasoning from a \texttt{MONA}-compiled, zero-allocation ANSI~C11 $\mathrm{LTL}_f$ runtime shield, MCAF ensures continuous, auditable operation across connected, degraded, and completely isolated pit environments.
+
+Extensive evaluation spanning {\TotalDesktopCycles} desktop GPU cycles, {\TotalPiCycles} embedded Raspberry Pi~5 (Cortex-A76) cycles, and {\TotalCShieldCycles} real-time C11 verification cycles established four principal findings:
+\begin{enumerate}
+    \item \emph{Insufficiency of syntactic constraints alone:} Grammar-constrained decoding (\texttt{GBNF}) inflates inference latency by up to $5.7\times$ on GPU without preventing state-dependent safety violations ($\textsc{SCR} \approx 81\%$), whereas formal $\mathrm{LTL}_f$ shielding enforces an unbroken $\textsc{SCR} = 100.0\%$ across all $635$ experimental cells, model scales, and timeout budgets.
+    \item \emph{Synergy of \texttt{MLP-LoRA} and local MCP-RAG:} Parameter-efficient \texttt{MLP-LoRA} adaptation on \texttt{Qwen2.5-0.5B-Q4\_K\_M} overcomes both the $\approx 80.5\%$ observability ceiling of memoryless symbolic interlocks and zero-shot RAG miscalibration, achieving {\LoRAHybridRAGDC} Decision Concordance in isolated operation ($p = 2.66 \times 10^{-89}$) with {\CrossArchLoRAIdentity} execution identity ($1{,}499/1{,}500$ cycles) between desktop CUDA and ARM64.
+    \item \emph{Hardware--quantization co-design on ARM64:} Due to exact $32$-weight block alignment with ARMv8.2-A \texttt{SDOT} vector instructions at $d_{\mathrm{model}} = 896$, \texttt{Qwen2.5-0.5B-Q8\_0} executes $2.16\times$ faster and $6.0\,^\circ\text{C}$ cooler than \texttt{0.5B-Q4\_K\_M} on the Raspberry Pi~5, enabling sub-$1.2\,\text{s}$ embedded RAG supervision within a $1.89\,\text{GB}$ memory footprint.
+    \item \emph{Sub-$10\,\mu\text{s}$ deterministic safety enforcement:} Locking the compiled ANSI~C11 automaton tables in physical RAM on an isolated Cortex-A76 core (\texttt{isolcpus=3}) under a \texttt{PREEMPT\_RT} kernel yields an invariant \CShieldMedianNs\ median, \CShieldPFourNinesNs\ at $p_{99.99}$, and a bounded worst-case tail of \CShieldRTStressedMaxUs\ under heavy concurrent system stress—reducing worst-case jitter by $5.19\times$ relative to standard Linux scheduling (\CShieldStdMaxUs).
+\end{enumerate}
+
+Future work will advance MCAF along three directions: (i)~integrating lock-free POSIX shared-memory IPC and SAE~J1939 / OPC-UA PubSub interfaces on a physical Hardware-in-the-Loop (HIL) haul-truck bench; (ii)~training \texttt{MLP-LoRA} adapters directly for SIMD-aligned \texttt{0.5B-Q8\_0} models to achieve zero-timeout embedded RAG arbitration under $1.2\,\text{s}$ budgets; and (iii)~extending $\mathrm{LTL}_f$ runtime synthesis to decentralized multi-agent V2V haul-road coordination under adversarial wireless conditions.
+
+\section*{DATA AVAILABILITY}
+To ensure full computational reproducibility, the complete source code of the Mine-Continuum Agentic Framework (MCAF)---including the discrete-time haul-truck situation simulator, the MCP-RAG orientation server, the \texttt{MONA}-based $\mathrm{LTL}_f$-to-DFA compiler (\texttt{compile\_shield.py}), the zero-allocation ANSI~C11 code generator and real-time benchmark suite (\texttt{c\_guard/}), the SHA-256 cryptographic model manifests (\texttt{models/MANIFEST.sha256}), the automated fiscal integrity auditor (\texttt{sanity\_check.py}), and the turnkey table/figure generation scripts---together with all $635$ raw audited CSV logs ({\TotalDesktopCycles} desktop GPU cycles and {\TotalPiCycles} Raspberry Pi~5 cycles) and {\TotalCShieldCycles} real-time shield benchmark records, is publicly available at \texttt{https://github.com/brenohar/MCAF} and permanently archived on the Open Science Framework (OSF).
+
+\begin{thebibliography}{20}
+
+\bibitem{iso17757}
+\emph{Earth-Moving Machinery and Mining---Autonomous and Semi-Autonomous Machine System Safety}, ISO Standard 17757:2019, International Organization for Standardization, Geneva, Switzerland, 2019.
+
+\bibitem{andrade2026mcaf}
+B.~H.~N. Andrade and R.~A.~R. Oliveira, ``Towards resilient agentic mining: An architectural framework using Model Context Protocol and deterministic safety guardrails,'' in \emph{Proc. Int. Conf. Enterprise Inf. Syst. (ICEIS)}, 2026.
+
+\bibitem{iec61508}
+\emph{Functional Safety of Electrical/Electronic/Programmable Electronic Safety-Related Systems}, IEC Standard 61508, International Electrotechnical Commission, Geneva, Switzerland, 2010.
+
+\bibitem{mcp2024}
+Anthropic, ``Model Context Protocol (MCP): Open specification for context-aware agentic integration,'' Technical Specification, 2024.
+
+\bibitem{qwen25}
+A.~Yang \emph{et al.}, ``Qwen2.5 technical report,'' \emph{arXiv preprint arXiv:2412.15115}, 2024.
+
+\bibitem{hu2022lora}
+E.~J. Hu \emph{et al.}, ``LoRA: Low-rank adaptation of large language models,'' in \emph{Proc. Int. Conf. Learn. Represent. (ICLR)}, 2022.
+
+\bibitem{alshiekh2018shield}
+M.~Alshiekh, R.~Bloem, R.~Ehlers, B.~K{\"o}nighofer, S.~Niekum, and U.~Topcu, ``Safe reinforcement learning via shielding,'' in \emph{Proc. AAAI Conf. Artif. Intell.}, vol.~32, no.~1, 2018, pp.~2669--2678.
+
+\bibitem{degiacomo2013ltlf}
+G.~De~Giacomo and M.~Y. Vardi, ``Linear temporal logic and linear dynamic logic on finite traces,'' in \emph{Proc. Int. Joint Conf. Artif. Intell. (IJCAI)}, 2013, pp.~854--860.
+
+\bibitem{klarlund2001mona}
+N.~Klarlund and A.~M{\o}ller, \emph{MONA Version 1.4 User Manual}, BRICS Notes Series NS-01-1, Dept. Comput. Sci., Univ. Aarhus, Aarhus, Denmark, Jan. 2001.
+
+\bibitem{reghenzani2019rt}
+F.~Reghenzani, G.~Massari, and W.~Fornaciari, ``The real-time Linux kernel: A survey on PREEMPT\_RT,'' \emph{ACM Comput. Surv.}, vol.~52, no.~1, pp.~1--36, Feb. 2019.
+
+\bibitem{marshall2016robotics}
+J.~A. Marshall, A.~Bonchis, E.~Nebot, and S.~Scheding, ``Robotics in mining,'' in \emph{Springer Handbook of Robotics}, 2nd~ed., B.~Siciliano and O.~Khatib, Eds. Cham, Switzerland: Springer, 2016, pp.~1549--1576.
+
+\bibitem{balouek2019continuum}
+D.~Balouek-Thomert, E.~G. Renart, A.~R. Zamani, A.~Simonet, and M.~Parashar, ``Towards a computing continuum: Enabling edge-to-cloud integration for data-driven workflows,'' \emph{Int. J. High Perform. Comput. Appl.}, vol.~33, no.~6, pp.~1159--1174, Nov. 2019.
+
+\bibitem{sisinni2018iiot}
+E.~Sisinni, A.~Saifullah, S.~Han, U.~Jennehag, and M.~Gidlund, ``Industrial Internet of Things: Challenges, opportunities, and directions,'' \emph{IEEE Trans. Ind. Informat.}, vol.~14, no.~11, pp.~4724--4734, Nov. 2018.
+
+\bibitem{dettmers2023qlora}
+T.~Dettmers, A.~Pagnoni, A.~Holtzman, and L.~Zettlemoyer, ``QLoRA: Efficient finetuning of quantized LLMs,'' in \emph{Adv. Neural Inf. Process. Syst. (NeurIPS)}, vol.~36, 2023, pp.~10088--10115.
+
+\bibitem{lewis2020rag}
+P.~Lewis \emph{et al.}, ``Retrieval-augmented generation for knowledge-intensive NLP tasks,'' in \emph{Adv. Neural Inf. Process. Syst. (NeurIPS)}, vol.~33, 2020, pp.~9459--9474.
+
+\bibitem{yao2023react}
+S.~Yao \emph{et al.}, ``ReAct: Synergizing reasoning and acting in language models,'' in \emph{Proc. Int. Conf. Learn. Represent. (ICLR)}, 2023.
+
+\bibitem{willard2023outlines}
+B.~T. Willard and R.~Louf, ``Efficient guided generation for large language models,'' \emph{arXiv preprint arXiv:2307.09702}, 2023.
+
+\bibitem{leucker2009rv}
+M.~Leucker and C.~Schallhart, ``A brief account of runtime verification,'' \emph{J. Logic Algebraic Program.}, vol.~78, no.~5, pp.~293--303, May--Jun. 2009.
+
+\bibitem{bloem2015shield}
+R.~Bloem, B.~K{\"o}nighofer, R.~K{\"o}nighofer, and C.~Wang, ``Shield synthesis: Runtime enforcement for reactive systems,'' in \emph{Proc. Tools Algorithms Construct. Anal. Syst. (TACAS)}, 2015, pp.~533--548.
+
 \end{thebibliography}
+
+\begin{IEEEbiography}[{\IfFileExists{breno.jpg}{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{breno.jpg}}{\IfFileExists{a1.png}{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{a1.png}}{\rule{1in}{1.25in}}}}]{Breno H. N. Andrade} (Graduate Student Member, IEEE) received the B.S.\ degree in [Field] from [Institution, City, Brazil, in Year]. He is currently pursuing the M.S.\ degree in computer science with the Department of Computing (DECOM), Federal University of Ouro Preto (UFOP), Ouro Preto, MG, Brazil, in collaboration with the Vale Institute of Technology (Instituto Tecnol\'{o}gico Vale---ITV), Belo Horizonte, MG, Brazil (ORCID: 0009-0006-4715-8755).
+
+He is also an Instructor of industrial networking and computer science courses, focusing on Operational Technology (OT) architectures and IT/OT convergence. His current research interests include industrial automation, OT cybersecurity, edge intelligence across the computing continuum, Small Language Models (SLMs), the Model Context Protocol (MCP), and formal runtime verification using temporal logic ($\mathrm{LTL}_f$).
+\end{IEEEbiography}
+
+\begin{IEEEbiography}[{\IfFileExists{ricardo.jpg}{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{ricardo.jpg}}{\IfFileExists{a2.png}{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{a2.png}}{\rule{1in}{1.25in}}}}]{Ricardo A. R. Oliveira} (Senior Member, IEEE) received the B.S., M.S., and Ph.D.\ degrees in computer science from [Federal University of Minas Gerais (UFMG), Belo Horizonte, MG, Brazil — verify exact years].
+
+He is currently a Professor with the Department of Computing (DECOM), Federal University of Ouro Preto (UFOP), Ouro Preto, MG, Brazil, where he leads research initiatives on embedded cyber-physical systems and industrial automation in partnership with mining and energy sectors. His research interests include real-time embedded systems, edge intelligence, wearable and autonomous vehicular computing, wireless sensor networks, and safety-critical industrial Internet of Things (IIoT) architectures.
+\end{IEEEbiography}
+
+\EOD
 
 \end{document}
