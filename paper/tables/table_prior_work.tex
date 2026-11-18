@@ -1,0 +1,22 @@
+\begin{table*}[t]
+\centering
+\caption{Comparison Between Prior Conference Works, Recent Related Frameworks, and This Extended Study}
+\label{tab:prior_work}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{llllll}
+\toprule
+\textbf{Study / Framework} & \textbf{Target Domain} & \textbf{Context \& Grounding} & \textbf{Adaptation / Policy} & \textbf{Safety Enforcement} & \textbf{Embedded \& RT Metrology} \\
+\midrule
+Safety Chip~\cite{yang2024safetychip} (ICRA'24) & Indoor robotics & Prompt-level state & Cloud LLM (0-shot) & LTL monitor (Python) & None (workstation/cloud) \\
+AgentSpec~\cite{wang2026agentspec} (ICSE'26) & Software/vehicle agents & Tool/API schemas & Cloud/local LLM & Handcrafted DSL rules & None (interpreter runtime) \\
+Vieira da Silva~\emph{et al.}~\cite{vieira2025mcp} (ETFA'25) & Smart manufacturing & Industrial MCP server & Prompted LLM agent & Schema validation only & None (no formal shield) \\
+Shi~\emph{et al.}~\cite{shi2026shields} (TOSEM'26) & Neural control policies & State vector only & DRL neural policy & Synthesized prog.\ shield & Desktop CPU simulation \\
+Dewit~\emph{et al.}~\cite{dewit2024pi5rt} (OSPERT'24) & Embedded Linux RT & None (OS benchmark) & Cyclic test tasks & None & Pi~5 \texttt{PREEMPT\_RT} latency \\
+\midrule
+Andrade \& Oliveira~\cite{andrade2026mcaf} (ICEIS'26) & Mining AHS concept & Conceptual MCP-RAG & Unadapted 3B/3.8B PoC & Proposed $\mathrm{LTL}_f$ concept & Desktop GPU only (no Pi~5, no C11) \\
+Andrade~\emph{et al.}~\cite{andrade2026sbesc} (SBESC'26) & Mining edge PoC & Offline RAG (0-shot/5-shot) & Unadapted Qwen2.5 (no LoRA) & Python DFA (\texttt{LogicGuard}) & Pi~5 CFS only (no \texttt{PREEMPT\_RT}, no C11) \\
+\textbf{This Work (MCAF Extended)} & \textbf{Mining AHS PoC} & \textbf{Asymmetric Hot/Cold MCP} & \textbf{Leak-free \texttt{MLP-LoRA} + Regex baseline} & \textbf{\texttt{MONA} DFA $\rightarrow$ ANSI C11 (3,456-state proof)} & \textbf{480k GPU + 12.5k Pi~5 + $5\times 10^7$ \texttt{PREEMPT\_RT} C11} \\
+\bottomrule
+\end{tabular}%
+}
+\end{table*}

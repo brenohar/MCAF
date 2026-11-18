@@ -1,0 +1,20 @@
+\begin{table*}[t]
+\centering
+\caption{Formal $\mathrm{LTL}_f$ Specifications, \texttt{MONA}-Compiled Automaton Structure, Priority Order, and Admissible Safe Action Sets}
+\label{tab:shield_rules}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{clllcccl}
+\toprule
+\textbf{Priority} & \textbf{Rule ID} & \textbf{$\mathrm{LTL}_f$ Specification ($\varphi_i$)} & \textbf{Atomic Valuation Predicates} & \textbf{Temporal Class} & \textbf{$|Q_i|$ ($F_i$)} & \textbf{BDD Edges} & \textbf{Admissible Safe Set $\mathcal{A}_{\mathrm{safe},i}$ (Override $a_{\mathrm{corr},i}$)} \\
+\midrule
+0 (Highest) & $\varphi_{\mathrm{brake}}$ & $\Box(\mathrm{brake\_hot} \rightarrow \mathrm{act\_estop})$ & $T_{\mathrm{brake}} > 200\,^\circ\text{C}$;\; $a = \texttt{emergency\_stop}$ & Single-cycle invariant & $2$ ($\{1\}$) & $3$ & $\{\texttt{emergency\_stop}\}$ (Override: \texttt{emergency\_stop}) \\
+1 & $\varphi_{\mathrm{gear}}$ & $\Box((\mathrm{rev\_mov} \rightarrow \mathrm{act\_estop}) \land (v_{\mathrm{pos}} \rightarrow \neg \mathrm{act\_rev}))$ & $v > 0 \land c_{\mathrm{op}}=\texttt{R}$;\; $v > 0$;\; $a = \texttt{estop}$;\; $a = \texttt{rev}$ & Single-cycle invariant & $2$ ($\{1\}$) & $3$ & $\{\texttt{emergency\_stop}\}$ if $\mathrm{rev\_mov}$; $\mathcal{A} \setminus \{\texttt{rev}\}$ if $v>0$ \\
+2 & $\varphi_{\mathrm{speed}}$ & $\Box(\mathrm{overspeed} \rightarrow \mathrm{act\_estop})$ & $v > 20\,\text{km/h}$;\; $a = \texttt{emergency\_stop}$ & Single-cycle invariant & $2$ ($\{1\}$) & $3$ & $\{\texttt{emergency\_stop}\}$ (Override: \texttt{emergency\_stop}) \\
+3 & $\varphi_{\mathrm{temp}}$ & $\Box(\mathrm{eng\_crit} \rightarrow \mathrm{act\_thermal\_safe})$ & $T_{\mathrm{eng}} > 105\,^\circ\text{C}$;\; $a \in \{\texttt{activate\_cooling}, \texttt{estop}\}$ & Single-cycle invariant & $2$ ($\{1\}$) & $3$ & $\{\texttt{activate\_cooling}, \texttt{emergency\_stop}\}$ (Override: \texttt{activate\_cooling}) \\
+4 (Lowest) & $\varphi_{\mathrm{auth}}$ & $((\neg \mathrm{op\_risk\_viol}) \,\mathcal{U}\, \mathrm{auth}) \lor \Box(\neg \mathrm{op\_risk\_viol})$ & $c_{\mathrm{op}}=\texttt{Op\_risk} \land \neg\alpha_{\mathrm{auth}} \land a \notin \mathcal{A}_{\mathrm{safe,4}}$;\; $\alpha_{\mathrm{auth}}$ & Multi-cycle weak-until ($\mathcal{W}$) & $3$ ($\{1,2\}$) & $5$ & $\mathcal{A}_{\mathrm{safe,4}} = \{\texttt{refuse\_op}, \texttt{activate\_cooling}, \texttt{estop}\}$ (Override: \texttt{refuse\_op}) \\
+\midrule
+\textbf{Total} & \multicolumn{4}{l}{\textbf{Compiled Bank:} 4 Instantaneous Safety Invariants + 1 Multi-Cycle Authorization Automaton (Product Bound: $2^4 \times 3 = 48$ states)} & \textbf{11 states} & \textbf{17 edges} & \textbf{Global Safe Intersection:} $\bigcap_{i=0}^{4} \mathcal{A}_{\mathrm{safe},i}(q_i, s) \supseteq \{\texttt{emergency\_stop}\} \neq \emptyset$ \\
+\bottomrule
+\end{tabular}%
+}
+\end{table*}
